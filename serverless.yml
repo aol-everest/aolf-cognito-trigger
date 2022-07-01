@@ -1,0 +1,71 @@
+org: sandeepkhoj
+app: cognito-trigger
+service: cognito-trigger
+
+frameworkVersion: '3'
+
+custom:
+  STAGE: ${self:provider.stage}
+  CONFIG: ${file(./config/config.js):CONFIG}
+
+provider:
+  name: aws
+  region: us-east-2
+  iam:
+    role: arn:aws:iam::829901743612:role/CognitoTiggerRole
+  runtime: nodejs14.x
+  stage: ${opt:stage, 'dev'}
+  memorySize: 1024 # optional, in MB, default is 1024
+  timeout: 10 # optional, in seconds, default is 6
+  versionFunctions: false # optional, default is true
+  tracing:
+    lambda: true
+  environment:
+    STAGE: ${self:provider.stage}
+    DATABASE_URL: ${self:custom.CONFIG.${self:custom.STAGE}.DATABASE_URL}
+
+functions:
+  customMessage:
+    handler: src/functions/customMessage.handler
+    name: ${sls:stage}-customMessage
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: CustomMessage
+          existing: true
+
+  migrateUser:
+    handler: src/functions/migrateUser.handler
+    name: ${sls:stage}-migrateUser
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: MigrateUser
+          existing: true
+
+  postAuthentication:
+    handler: src/functions/postAuthentication.handler
+    name: ${sls:stage}-postAuthentication
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: PostAuthentication
+          existing: true
+
+  postConfirmation:
+    handler: src/functions/postConfirmation.handler
+    name: ${sls:stage}-postConfirmation
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: PostConfirmation
+          existing: true
+
+  preSignup:
+    handler: src/functions/preSignup.handler
+    name: ${sls:stage}-preSignup
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: PreSignup
+          existing: true
