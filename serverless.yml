@@ -34,13 +34,13 @@ functions:
           trigger: CustomMessage
           existing: true
 
-  migrateUser:
+  UserMigration:
     handler: src/functions/migrateUser.handler
     name: ${sls:stage}-migrateUser
     events:
       - cognitoUserPool:
           pool: aol-${sls:stage}
-          trigger: MigrateUser
+          trigger: UserMigration
           existing: true
 
   postAuthentication:
@@ -67,5 +67,5 @@ functions:
     events:
       - cognitoUserPool:
           pool: aol-${sls:stage}
-          trigger: PreSignup
+          trigger: PreSignUp
           existing: true
