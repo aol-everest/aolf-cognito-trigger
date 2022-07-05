@@ -35,4 +35,4 @@ jobs:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          DEV_DATABASE_URL: ${{secrets.DEV_DATABASE_URL}}
+          QA_DATABASE_URL: ${{secrets.QA_DATABASE_URL}}
