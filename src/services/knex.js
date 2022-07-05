@@ -10,7 +10,10 @@ pg.defaults.ssl =
 function createKnexConnection(connection, searchPath) {
   return knex({
     client: 'pg',
-    connection,
+    connection: {
+      connectionString: connection,
+      ssl: { rejectUnauthorized: false },
+    },
     searchPath,
     debug: config.IS_LOCAL_DEVELOPMENT,
   });
