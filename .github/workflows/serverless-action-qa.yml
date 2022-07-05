@@ -1,9 +1,9 @@
-name: 🚀 Deploy serverless dev app
+name: 🚀 Deploy serverless qa app
 
 on:
   push:
     branches:
-      - dev
+      - qa
 
 jobs:
   deploy:
@@ -25,7 +25,7 @@ jobs:
       - name: 🚀 Serverless deploy
         uses: serverless/github-action@v3.1
         with:
-          args: deploy --stage dev
+          args: deploy --stage qa
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
