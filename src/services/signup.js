@@ -2,6 +2,7 @@ const client = require('./knex').herokuConnectClient;
 const { v1: uuidv1 } = require('uuid');
 const { lookupUser } = require('./auth');
 const upsert = require('./upsert')(client);
+const config = require('config');
 
 const getRecordTypeId = async (sobject, recordTypeName) => {
   const recordTypes = await client
@@ -18,22 +19,29 @@ const getRecordTypeId = async (sobject, recordTypeName) => {
 
   const [recordType] = recordTypes;
   return recordType;
-}
+};
 
 const upsertSFObject = (tableName, recordObject, constraintKey) => {
-  return upsert(
-    {
-      table: tableName,
-      object: recordObject,
-      constraint: constraintKey,
-    }
-  );
-}
+  return upsert({
+    table: tableName,
+    object: recordObject,
+    constraint: constraintKey,
+  });
+};
 
-const signup = async (userId, userAttribute) => {
+const signup = async (userId, userAttribute, callerContext) => {
+  let signupOrgnization = 'AOL';
+  switch (callerContext.clientId) {
+    case config.IAHV_CLIENT_ID:
+      signupOrgnization = 'IAHV';
+      break;
+    case config.HB_CLIENT_ID:
+      signupOrgnization = 'HB';
+      break;
+  }
   const recordtype = await getRecordTypeId('Account', 'PersonAccount');
   const user = await lookupUser(userAttribute.email);
-  if(!user) {
+  if (!user) {
     const userPayload = {
       external_id__c: uuidv1(),
       cognito_user_id__c: userId,
@@ -44,12 +52,21 @@ const signup = async (userId, userAttribute) => {
       recordtypeid: recordtype.sfid,
       entity_type__pc: 'Student',
       status__c: 'Active',
+      signup_orgnization__pc: signupOrgnization,
+      user_status__pc: 'Active',
+      user_source__pc: 'Member Site',
     };
-    return await upsertSFObject('salesforce.account', userPayload, 'external_id__c');
-  } else {
+    return await upsertSFObject(
+      'salesforce.account',
+      userPayload,
+      'external_id__c'
+    );
+  } else if (user_status__pc !== 'Disabled') {
     let userPayload = {
       external_id__c: user.externalId,
-      status__c: 'Active',
+      signup_orgnization__pc: signupOrgnization,
+      user_source__pc: 'Member Site',
+      user_status__pc: 'Active',
     };
     if (!user.cognito_user_id__c && userId) {
       userPayload = {
@@ -72,7 +89,7 @@ const signup = async (userId, userAttribute) => {
       'external_id__c'
     );
   }
-}
+};
 
 module.exports = {
   signup,

@@ -23,6 +23,9 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     DATABASE_URL: ${self:custom.CONFIG.${self:custom.STAGE}.DATABASE_URL}
+    IAHV_CLIENT_ID: ${self:custom.CONFIG.IAHV_CLIENT_ID}
+    HB_CLIENT_ID: ${self:custom.CONFIG.HB_CLIENT_ID}
+    AOL_CLIENT_ID: ${self:custom.CONFIG.AOL_CLIENT_ID}
 
 functions:
   customMessage:

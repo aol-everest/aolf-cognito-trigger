@@ -1,13 +1,8 @@
 const dotenv = require('dotenv');
 dotenv.config();
 module.exports.CONFIG = (serverless) => ({
-  dev: {
-    DATABASE_URL: process.env.DEV_DATABASE_URL,
-  },
-  qa: {
-    DATABASE_URL: process.env.QA_DATABASE_URL,
-  },
-  prod: {
-    DATABASE_URL: process.env.PROD_DATABASE_URL,
-  },
+  DATABASE_URL: process.env.DATABASE_URL,
+  IAHV_CLIENT_ID: process.env.IAHV_CLIENT_ID,
+  HB_CLIENT_ID: process.env.HB_CLIENT_ID,
+  AOL_CLIENT_ID: process.env.AOL_CLIENT_ID,
 });
