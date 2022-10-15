@@ -1,4 +1,4 @@
-const { updateTimeStamp } = require('./../services/updateTimeStamp');
+const { lookupUser } = require('./../services/auth');
 exports.handler = async (event, context, callback) => {
   // Send post authentication data to Cloudwatch logs
   console.log(event);
