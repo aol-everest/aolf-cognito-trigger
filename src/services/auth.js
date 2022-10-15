@@ -38,7 +38,7 @@ const lookupUser = async (userName) => {
       'account.personmobilephone as phone_number',
       'account.cognito_user_id__c',
       'account.user_status__pc',
-      'account.signup_orgnization__pc',
+      'account.user_default_organization__pc',
       'account.user_source__pc',
       'account.recordtypeid'
     )

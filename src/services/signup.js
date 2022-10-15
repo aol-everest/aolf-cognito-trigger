@@ -53,7 +53,7 @@ const signup = async (userId, userAttribute, callerContext) => {
       recordtypeid: recordtype.sfid,
       entity_type__pc: 'Student',
       status__c: 'Active',
-      signup_orgnization__pc: signupOrgnization,
+      user_default_organization__pc: signupOrgnization,
       user_status__pc: 'Active',
       user_source__pc: 'Member Site',
     };
@@ -65,7 +65,8 @@ const signup = async (userId, userAttribute, callerContext) => {
   } else if (user.user_status__pc !== 'Disabled') {
     let userPayload = {
       external_id__c: user.externalId,
-      signup_orgnization__pc: user.signup_orgnization__pc || signupOrgnization,
+      user_default_organization__pc:
+        user.user_default_organization__pc || signupOrgnization,
       user_source__pc: user.user_source__pc || 'Member Site',
       user_status__pc: 'Active',
     };
