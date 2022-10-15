@@ -25,7 +25,7 @@ exports.handler = async (event, context, callback) => {
         event.response.messageAction = 'SUPPRESS';
         context.succeed(event);
       } catch (ex) {
-        callback(ex);
+        callback(ex, event);
       }
     } else if (event.triggerSource === 'UserMigration_ForgotPassword') {
       event.response.userAttributes = {
@@ -41,8 +41,8 @@ exports.handler = async (event, context, callback) => {
       context.succeed(event);
     } else {
       // Return error to Amazon Cognito
-      callback('Bad triggerSource ' + event.triggerSource);
+      callback('Bad triggerSource ' + event.triggerSource, event);
     }
   }
-  context.done(null, event);
+  callback(null, event);
 };

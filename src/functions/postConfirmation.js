@@ -1,5 +1,5 @@
 const { signup } = require('./../services/signup');
-exports.handler = async (event, context) => {
+exports.handler = async (event, context, callback) => {
   console.log(event);
   await signup(
     event.userName,
@@ -9,5 +9,5 @@ exports.handler = async (event, context) => {
   /*if(true) {
     throw new Error('Known error!');
   }*/
-  context.done(null, event);
+  callback(null, event);
 };

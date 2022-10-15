@@ -46,6 +46,15 @@ functions:
           trigger: UserMigration
           existing: true
 
+  preAuthentication:
+    handler: src/functions/preAuthentication.handler
+    name: ${sls:stage}-preAuthentication
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: PreAuthentication
+          existing: true
+
   postAuthentication:
     handler: src/functions/postAuthentication.handler
     name: ${sls:stage}-postAuthentication

@@ -10,5 +10,5 @@ exports.handler = async (event, context, callback) => {
 
   await updateTimeStamp(event.userName, event.request.userAttributes);
   // Return to Amazon Cognito
-  context.done(null, event);
+  callback(null, event);
 };
