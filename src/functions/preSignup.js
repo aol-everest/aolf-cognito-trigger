@@ -23,7 +23,7 @@ exports.handler = async (event, context, callback) => {
       } else if (user.user_status__pc === 'Disabled') {
         // Return error to Amazon Cognito
         callback(
-          'You have been disabled from using your account. Please contact customer service for assistance.',
+          '[You have been disabled from using your account. Please contact customer service for assistance.]',
           event
         );
       }

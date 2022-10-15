@@ -11,7 +11,7 @@ exports.handler = async (event, context, callback) => {
       // Return error to Amazon Cognito
       callback(
         new Error(
-          'You have been disabled from using your account. Please contact customer service for assistance.'
+          '[You have been disabled from using your account. Please contact customer service for assistance.]'
         ),
         event
       );
@@ -20,7 +20,7 @@ exports.handler = async (event, context, callback) => {
       // Return error to Amazon Cognito
       callback(
         new Error(
-          'Account does not exist. Please contact customer service for assistance.'
+          '[Account does not exist. Please contact customer service for assistance.]'
         ),
         event
       );
