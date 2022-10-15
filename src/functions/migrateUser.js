@@ -2,6 +2,7 @@ const { authenticateUser, lookupUser } = require('./../services/auth');
 const { composePhoneNumber } = require('./../services/util');
 exports.handler = async (event, context, callback) => {
   // Send post authentication data to Cloudwatch logs
+  context.callbackWaitsForEmptyEventLoop = false;
   console.log('Trigger function =', event.triggerSource);
   console.log(event);
 

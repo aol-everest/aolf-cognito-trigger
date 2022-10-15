@@ -1,5 +1,6 @@
 const { lookupUser } = require('./../services/auth');
 exports.handler = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
   // Send post authentication data to Cloudwatch logs
   console.log(event);
 
@@ -8,7 +9,7 @@ exports.handler = async (event, context, callback) => {
   if (user) {
     if (user.user_status__pc === 'Disabled') {
       // Return error to Amazon Cognito
-      return callback(
+      callback(
         new Error(
           'You have been disabled from using your account. Please contact customer service for assistance.'
         ),
@@ -17,7 +18,7 @@ exports.handler = async (event, context, callback) => {
     }
     if (user.user_status__pc !== 'Active') {
       // Return error to Amazon Cognito
-      return callback(
+      callback(
         new Error(
           'Account does not exist. Please contact customer service for assistance.'
         ),
@@ -27,5 +28,5 @@ exports.handler = async (event, context, callback) => {
   }
 
   // Return to Amazon Cognito
-  return callback(null, event);
+  callback(null, event);
 };

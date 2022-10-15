@@ -5,6 +5,7 @@ const {
 } = require('./../services/adminLinkProviderForUser');
 const { lookupUser } = require('./../services/auth');
 exports.handler = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
   console.log(event);
 
   if (
@@ -18,13 +19,10 @@ exports.handler = async (event, context, callback) => {
     if (user) {
       if (user.user_status__pc === 'Active') {
         // Return error to Amazon Cognito
-        return callback(
-          '[An account with the given email already exists.]',
-          event
-        );
+        callback('[An account with the given email already exists.]', event);
       } else if (user.user_status__pc === 'Disabled') {
         // Return error to Amazon Cognito
-        return callback(
+        callback(
           'You have been disabled from using your account. Please contact customer service for assistance.',
           event
         );

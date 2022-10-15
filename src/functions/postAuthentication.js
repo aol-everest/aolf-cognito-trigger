@@ -1,5 +1,6 @@
 const { updateTimeStamp } = require('./../services/updateTimeStamp');
 exports.handler = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
   // Send post authentication data to Cloudwatch logs
   console.log('Authentication successful');
   console.log('Trigger function =', event.triggerSource);

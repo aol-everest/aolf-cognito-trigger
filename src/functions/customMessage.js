@@ -1,5 +1,6 @@
 const pug = require('pug');
 exports.handler = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
   if (event.triggerSource === 'CustomMessage_ForgotPassword') {
     const html = await pug.renderFile('src/Template/forgotPassword.pug', {
       codeParameter: event.request.codeParameter,

@@ -1,5 +1,6 @@
 const { signup } = require('./../services/signup');
 exports.handler = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
   console.log(event);
   await signup(
     event.userName,
