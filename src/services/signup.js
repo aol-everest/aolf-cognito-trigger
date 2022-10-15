@@ -39,6 +39,7 @@ const signup = async (userId, userAttribute, callerContext) => {
       signupOrgnization = 'HB';
       break;
   }
+  console.log('signupOrgnization', signupOrgnization);
   const recordtype = await getRecordTypeId('Account', 'PersonAccount');
   const user = await lookupUser(userAttribute.email);
   if (!user) {

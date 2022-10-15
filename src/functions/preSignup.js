@@ -14,9 +14,14 @@ exports.handler = async (event, context, callback) => {
   ) {
     // Lookup the user in your existing user directory service
     const user = await lookupUser(event.request.userAttributes.email);
-    if (user) {
+    if (user && user.user_status__pc === 'Active') {
       // Return error to Amazon Cognito
       return callback('[An account with the given email already exists.]');
+    }
+    if (user.user_status__pc === 'Disabled') {
+      return callback(
+        'You have been disabled from using your account. Please contact customer service for assistance.'
+      );
     }
   }
 
