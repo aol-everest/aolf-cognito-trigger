@@ -64,6 +64,7 @@ const signup = async (userId, userAttribute, callerContext) => {
     );
   } else if (user.user_status__pc !== 'Disabled') {
     let userPayload = {
+      sfid: user.sfid,
       external_id__c: user.externalId,
       user_default_organization__pc:
         user.user_default_organization__pc || signupOrgnization,
@@ -85,11 +86,7 @@ const signup = async (userId, userAttribute, callerContext) => {
     if (userAttribute.picture) {
       userPayload = { ...userPayload, picture__c: userAttribute.picture };
     }
-    return await upsertSFObject(
-      'salesforce.account',
-      userPayload,
-      'external_id__c'
-    );
+    return await upsertSFObject('salesforce.account', userPayload, 'sfid');
   }
 };
 
