@@ -20,11 +20,10 @@ const getRecordTypeId = async (sobject, recordTypeName) => {
 
 const lookupUser = async (userName) => {
   const recordtype = await getRecordTypeId('Account', 'PersonAccount');
-  console.log(recordtype);
   let query = client
     .withSchema('salesforce')
     .select(
-      'account.sfid AS id',
+      'account.sfid',
       'account.entity_type__pc AS userType',
       'account.external_id__c AS externalId',
       'account.name AS name',
