@@ -65,8 +65,7 @@ const signup = async (userId, userAttribute, callerContext) => {
   } else if (user.user_status__pc !== 'Disabled') {
     let userPayload = {
       external_id__c: user.externalId,
-      user_default_organization__pc:
-        user.user_default_organization__pc || signupOrgnization,
+      user_default_organization__pc: signupOrgnization,
       user_source__pc: user.user_source__pc || 'Member Site',
       user_status__pc: 'Active',
     };
