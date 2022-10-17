@@ -20,7 +20,7 @@ exports.handler = async (event, context, callback) => {
       // Return error to Amazon Cognito
       callback(
         new Error(
-          '[Account does not exist. Please contact customer service for assistance.]'
+          '[There Are Problems with Your Account. Please contact customer service for assistance.]'
         ),
         event
       );
