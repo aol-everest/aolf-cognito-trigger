@@ -16,7 +16,7 @@ exports.handler = async (event, context, callback) => {
         event
       );
     }
-    if (user.user_status__pc !== 'Active') {
+    /* if (user.user_status__pc !== 'Active') {
       // Return error to Amazon Cognito
       callback(
         new Error(
@@ -24,7 +24,7 @@ exports.handler = async (event, context, callback) => {
         ),
         event
       );
-    }
+    } */
   }
 
   // Return to Amazon Cognito
