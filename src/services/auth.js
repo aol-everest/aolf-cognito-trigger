@@ -18,7 +18,12 @@ const getRecordTypeId = async (sobject, recordTypeName) => {
   return recordType;
 };
 
+const isEmpty = (str) => !str || !str.trim();
+
 const lookupUser = async (userName) => {
+  if (isEmpty(userName)) {
+    return null;
+  }
   const recordtype = await getRecordTypeId('Account', 'PersonAccount');
   let query = client
     .withSchema('salesforce')
