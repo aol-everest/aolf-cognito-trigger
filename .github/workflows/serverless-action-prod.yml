@@ -1,0 +1,41 @@
+name: 🚀 Deploy serverless prod app
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: 🚀 Deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - name: 🏗 Checkout
+        uses: actions/checkout@v2
+
+      - name: 🏗 Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 🏗 Setup yarn
+        run: npm install -g yarn
+
+      - name: 📦 Install packages
+        run: yarn install
+
+      - name: 🚀 Serverless deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: deploy --stage prod
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DATABASE_URL: ${{secrets.PROD_DATABASE_URL}}
+          IAHV_CLIENT_ID: ${{secrets.PROD_IAHV_CLIENT_ID}}
+          HB_CLIENT_ID: ${{secrets.PROD_HB_CLIENT_ID}}
+          AOL_CLIENT_ID: ${{secrets.PROD_AOL_CLIENT_ID}}
