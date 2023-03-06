@@ -51,7 +51,7 @@ const signup = async (userId, userAttribute, callerContext) => {
       personemail: userAttribute.email,
       picture__c: userAttribute.picture,
       recordtypeid: recordtype.sfid,
-      entity_type__pc: 'Student',
+      entity_type__pc: 'Member',
       status__c: 'Active',
       user_default_organization__pc: signupOrgnization,
       user_status__pc: 'Active',
