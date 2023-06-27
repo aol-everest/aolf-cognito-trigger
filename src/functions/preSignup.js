@@ -7,6 +7,14 @@ const { lookupUser } = require('./../services/auth');
 exports.handler = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
   console.log(event);
+  if (event.request.userAttributes.hasOwnProperty('email')) {
+    event.response.autoVerifyEmail = true;
+    event.response.autoConfirmUser = true;
+  }
+
+  if (!event.request.userAttributes.hasOwnProperty('family_name')) {
+    event.request.userAttributes.family_name = 'UNKNOWN';
+  }
 
   if (
     event.triggerSource !== 'PreSignUp_ExternalProvider' &&
