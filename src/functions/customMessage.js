@@ -17,7 +17,7 @@ exports.handler = async (event, context, callback) => {
     const html = await pug.renderFile('src/Template/adminCreateUser.pug', {
       codeParameter: event.request.codeParameter,
       email: event.request.usernameParameter,
-      firstName: event.request.userAttribute.given_name,
+      firstName: event.request.userAttributes.given_name,
     });
     console.log(html);
     // Ensure that your message contains event.request.codeParameter. This is the placeholder for code that will be sent
