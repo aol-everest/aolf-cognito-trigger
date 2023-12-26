@@ -1,21 +1,32 @@
 extends main-layout.pug
 block content
-  h3(style='text-align:center;')
-    | Temporary Password
-  p(style='color:#808080;text-align:center;font-size:14px')
-    | Your username is 
-    strong(style='color:#000000;')
-      | #{email}
-    |  and temporary password is 
-    strong(style='color:#000000;')
-      | #{codeParameter}
-  br
-  br
-  p(style='color:#808080;text-align:center;font-size:14px')
-    | Thanks!
-    br
-    strong
-      | Art of Living Journey
-  hr(style="border:2px solid #eaeef3;border-bottom:0;margin:20px 0")
-  p(style="text-align:center;color:#a9b3bc;font-size:12px;")
-    | If you did not make this request, please contact us by replying to this mail.
+  div(style='color:#808080;font-size:14px')
+    p Hi #{firstName},
+    p
+      | Welcome to the Art of Living! 
+      br
+      | We`ve created your new profile on our 
+      a(style='color: #fda249; text-decoration: none', href='https://members.us.artofliving.org/us-en/lp/journey-app') Journey App
+    p(style='color:#000000;')
+      b Username: 
+      |  #{email}
+      br
+      b Temporary password: 
+      |  #{codeParameter}
+    p
+      a(style='color: #fda249; text-decoration: none', href='https://members.us.artofliving.org/login?mode=RESET_PASSWORD_REQUEST') Reset your password
+    p(style='line-height: 26px')
+      i 
+        a(style='color: #fda249; text-decoration: none', href='https://members.us.artofliving.org/us-en/lp/journey-app') What`s on the Journey App?
+      br
+      |  Discover an inspiring ecosystem of guided meditations, breathing exercises, mind-bending insights, and more-right at your fingertips!
+      br
+      a(style='color: #fda249; text-decoration: none', href='https://members.us.artofliving.org/us-en/lp/journey-app') Activate your free 14-day trial
+    p With you on the journey,
+    p
+      | Sarah
+      br
+      | Art of Living Team
+    hr(style="border:2px solid #eaeef3;border-bottom:0;margin:20px 0")
+    p(style="text-align:center;color:#a9b3bc;font-size:12px;")
+      | If you did not make this request, please contact us by replying to this mail.

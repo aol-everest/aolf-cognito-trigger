@@ -17,18 +17,18 @@ exports.handler = async (event, context, callback) => {
     const html = await pug.renderFile('src/Template/adminCreateUser.pug', {
       codeParameter: event.request.codeParameter,
       email: event.request.usernameParameter,
+      firstName: event.request.userAttribute.given_name,
     });
     console.log(html);
     // Ensure that your message contains event.request.codeParameter. This is the placeholder for code that will be sent
     /*event.response.smsMessage = `Art of Living Journey: You have submitted a password change request!
     If it was you, confirm the password change request by using verification code.
     Your verification code is ${event.request.codeParameter}.`;*/
-    event.response.emailSubject =
-      'Art of Living Journey: Your temporary password';
+    event.response.emailSubject = 'Welcome to the Art of Living!';
     event.response.emailMessage = `${html}`;
   }
   // Create custom message for other events
 
   // Return to Amazon Cognito
   callback(null, event);
-}
+};
