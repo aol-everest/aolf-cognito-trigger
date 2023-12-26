@@ -1,6 +1,6 @@
 extends main-layout.pug
 block content
-  div(style='color:#808080;font-size:14px')
+  div(style='text-align: left;color:#6f7283;font-size:14px;line-height: 20px;font-weight: 400;')
     p Hi #{firstName},
     p
       | Welcome to the Art of Living! 
@@ -15,7 +15,7 @@ block content
       |  #{codeParameter}
     p
       a(style='color: #fda249; text-decoration: none', href='https://members.us.artofliving.org/login?mode=RESET_PASSWORD_REQUEST') Reset your password
-    p(style='line-height: 26px')
+    p
       i 
         a(style='color: #fda249; text-decoration: none', href='https://members.us.artofliving.org/us-en/lp/journey-app') What`s on the Journey App?
       br
@@ -27,6 +27,3 @@ block content
       | Sarah
       br
       | Art of Living Team
-    hr(style="border:2px solid #eaeef3;border-bottom:0;margin:20px 0")
-    p(style="text-align:center;color:#a9b3bc;font-size:12px;")
-      | If you did not make this request, please contact us by replying to this mail.
