@@ -24,6 +24,7 @@ exports.handler = async (event, context, callback) => {
     /*event.response.smsMessage = `Art of Living Journey: You have submitted a password change request!
     If it was you, confirm the password change request by using verification code.
     Your verification code is ${event.request.codeParameter}.`;*/
+    event.response.smsMessage = `Your new profile is ready, ${event.request.userAttributes.given_name}.`;
     event.response.emailSubject = 'Welcome to the Art of Living!';
     event.response.emailMessage = `${html}`;
   }
