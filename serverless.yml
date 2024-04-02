@@ -106,5 +106,5 @@ functions:
     events:
       - cognitoUserPool:
           pool: aol-${sls:stage}
-          trigger: VerifyAuthChallenge
+          trigger: VerifyAuthChallengeResponse
           existing: true
