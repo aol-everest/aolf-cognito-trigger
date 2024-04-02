@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "devDependencies": {},
   "dependencies": {
-    "aws-sdk": "^2.1166.0",
+    "aws-sdk": "^2.1590.0",
     "bcryptjs": "^2.4.3",
-    "config": "^3.3.7",
+    "config": "^3.3.11",
     "crypto": "^1.0.1",
-    "dotenv": "^16.0.1",
-    "knex": "^2.1.0",
-    "pg": "^8.7.3",
+    "dotenv": "^16.4.5",
+    "knex": "^3.1.0",
+    "pg": "^8.11.4",
     "pug": "^3.0.2",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.1"
   }
 }
