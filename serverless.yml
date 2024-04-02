@@ -81,3 +81,30 @@ functions:
           pool: aol-${sls:stage}
           trigger: PreSignUp
           existing: true
+
+  defineAuthChallenge:
+    handler: src/functions/defineAuthChallenge.handler
+    name: ${sls:stage}-defineAuthChallenge
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: DefineAuthChallenge
+          existing: true
+
+  createAuthChallenge:
+    handler: src/functions/createAuthChallenge.handler
+    name: ${sls:stage}-createAuthChallenge
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: CreateAuthChallenge
+          existing: true
+
+  verifyAuthChallenge:
+    handler: src/functions/verifyAuthChallenge.handler
+    name: ${sls:stage}-verifyAuthChallenge
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: VerifyAuthChallenge
+          existing: true
