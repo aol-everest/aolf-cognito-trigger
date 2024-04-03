@@ -1,97 +1,39 @@
-var crypto = require('crypto');
+import * as fido2 from './../services/fido2.js';
+import * as smsOtpStepUp from './../services/sms-otp-stepup.js';
+import * as magicLink from './../services/magic-link.js';
+import { logger, UserFacingError } from './../services/common.js';
 
-exports.handler = async (event) => {
-  console.log(event);
-
-  //--------get private challenge data
-  const challenge = event.request.privateChallengeParameters.challenge;
-  const credId = event.request.privateChallengeParameters.credId;
-
-  //--------publickey information
-  var publicKeyCred = event.request.userAttributes['custom:publicKeyCred'];
-  var publicKeyCredJSON = JSON.parse(
-    Buffer.from(publicKeyCred, 'base64').toString('ascii')
-  );
-
-  //-------get challenge ansower
-  const challengeAnswerJSON = JSON.parse(event.request.challengeAnswer);
-
-  const verificationResult = await validateAssertionSignature(
-    publicKeyCredJSON,
-    challengeAnswerJSON
-  );
-  console.log('Verification Results:' + verificationResult);
-
-  if (verificationResult) {
-    event.response.answerCorrect = true;
-  } else {
-    event.response.answerCorrect = false;
-  }
-  return event;
-};
-
-async function validateAssertionSignature(
-  publicKeyCredJSON,
-  challengeAnswerJSON
-) {
-  var expectedSignature = toArrayBuffer(
-    challengeAnswerJSON.response.signature,
-    'signature'
-  );
-  var publicKey = publicKeyCredJSON.publicKey;
-  var rawAuthnrData = toArrayBuffer(
-    challengeAnswerJSON.response.authenticatorData,
-    'authenticatorData'
-  );
-  var rawClientData = toArrayBuffer(
-    challengeAnswerJSON.response.clientDataJSON,
-    'clientDataJSON'
-  );
-
-  const hash = crypto.createHash('SHA256');
-  hash.update(Buffer.from(new Uint8Array(rawClientData)));
-  var clientDataHashBuf = hash.digest();
-  var clientDataHash = new Uint8Array(clientDataHashBuf).buffer;
-
-  const verify = crypto.createVerify('SHA256');
-  verify.write(Buffer.from(new Uint8Array(rawAuthnrData)));
-  verify.write(Buffer.from(new Uint8Array(clientDataHash)));
-  verify.end();
-
-  var res = null;
+export const handler = async (event) => {
+  logger.debug(JSON.stringify(event, null, 2));
   try {
-    res = verify.verify(
-      publicKey,
-      Buffer.from(new Uint8Array(expectedSignature))
+    event.response.answerCorrect = false;
+
+    // Enforce FIDO2?
+    if (event.request.clientMetadata?.signInMethod !== 'FIDO2') {
+      await fido2.assertFido2SignInOptional(event);
+    }
+
+    // Verify challenge answer
+    if (event.request.clientMetadata?.signInMethod === 'MAGIC_LINK') {
+      await magicLink.addChallengeVerificationResultToEvent(event);
+    } else if (event.request.clientMetadata?.signInMethod === 'FIDO2') {
+      await fido2.addChallengeVerificationResultToEvent(event);
+    } else if (
+      event.request.clientMetadata?.signInMethod === 'SMS_OTP_STEPUP'
+    ) {
+      await smsOtpStepUp.addChallengeVerificationResultToEvent(event);
+    }
+
+    // Return event
+    logger.debug(JSON.stringify(event, null, 2));
+    logger.info(
+      'Verification result, answerCorrect:',
+      event.response.answerCorrect
     );
-  } catch (e) {
-    console.error(e);
+    return event;
+  } catch (err) {
+    logger.error(err);
+    if (err instanceof UserFacingError) throw err;
+    throw new Error('Internal Server Error');
   }
-
-  return res;
-}
-
-function toArrayBuffer(buf, name) {
-  if (!name) {
-    throw new TypeError('name not specified');
-  }
-
-  if (typeof buf === 'string') {
-    buf = buf.replace(/-/g, '+').replace(/_/g, '/');
-    buf = Buffer.from(buf, 'base64');
-  }
-
-  if (buf instanceof Buffer || Array.isArray(buf)) {
-    buf = new Uint8Array(buf);
-  }
-
-  if (buf instanceof Uint8Array) {
-    buf = buf.buffer;
-  }
-
-  if (!(buf instanceof ArrayBuffer)) {
-    throw new TypeError(`could not convert '${name}' to ArrayBuffer`);
-  }
-
-  return buf;
-}
+};

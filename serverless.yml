@@ -110,3 +110,12 @@ functions:
           pool: aol-${sls:stage}
           trigger: VerifyAuthChallengeResponse
           existing: true
+
+  preToken:
+    handler: src/functions/preToken.handler
+    name: ${sls:stage}-preToken
+    events:
+      - cognitoUserPool:
+          pool: aol-${sls:stage}
+          trigger: PreTokenGeneration
+          existing: true

@@ -1,63 +1,102 @@
-/**
- * 1- if user doesn't exist, throw exception
- * 2- if CUSTOM_CHALLENGE answer is correct, authentication successful
- * 3- if PASSWORD_VERIFIER challenge answer is correct, return custom challeneg (3,4 will be appliable if password+fido is selected)
- * 4- if challenge name is SRP_A, return PASSWORD_VERIFIER challenge (3,4 will be appliable if password+fido is selected)
- * 5- if 5 attempts with no correct answer, fail authentication
- * 6- default is to respond with CUSTOM_CHALLENEG --> password-less authentication
- * */
+import { logger } from './../services/common.js';
 
-exports.handler = (event, context, callback) => {
-  console.log(event);
-  console.log(event.request.session);
-  console.log(context);
+export const handler = async (event) => {
+  logger.debug(JSON.stringify(event, null, 2));
 
-  // If user is not registered
-  if (event.request.userNotFound) {
-    event.response.issueToken = false;
-    event.response.failAuthentication = true;
-    throw new Error('User does not exist');
+  if (!event.request.session.length) {
+    // The auth flow just started, send a custom challenge
+    logger.info('No session yet, starting one ...');
+    return customChallenge(event);
   }
 
+  // We only accept custom challenges
   if (
-    event.request.session &&
-    event.request.session.length &&
-    event.request.session.slice(-1)[0].challengeName === 'CUSTOM_CHALLENGE' &&
-    event.request.session.slice(-1)[0].challengeResult === true
+    event.request.session.find(
+      (attempt) => attempt.challengeName !== 'CUSTOM_CHALLENGE'
+    )
   ) {
-    // The user provided the right answer; succeed auth
-    event.response.issueTokens = true;
-    event.response.failAuthentication = false;
-  } else if (
-    event.request.session &&
-    event.request.session.length &&
-    event.request.session.slice(-1)[0].challengeName === 'PASSWORD_VERIFIER' &&
-    event.request.session.slice(-1)[0].challengeResult === true
-  ) {
-    event.response.issueTokens = false;
-    event.response.failAuthentication = false;
-    event.response.challengeName = 'CUSTOM_CHALLENGE';
-  } else if (
-    event.request.session &&
-    event.request.session.length &&
-    event.request.session.slice(-1)[0].challengeName === 'SRP_A'
-  ) {
-    event.response.issueTokens = false;
-    event.response.failAuthentication = false;
-    event.response.challengeName = 'PASSWORD_VERIFIER';
-  } else if (
-    event.request.session.length >= 5 &&
-    event.request.session.slice(-1)[0].challengeResult === false
-  ) {
-    event.response.issueToken = false;
-    event.response.failAuthentication = true;
-    throw new Error('Invalid credentials');
-  } else {
-    event.response.issueTokens = false;
-    event.response.failAuthentication = false;
-    event.response.challengeName = 'CUSTOM_CHALLENGE';
+    return deny(event, 'Expected CUSTOM_CHALLENGE');
   }
 
-  // Return to Amazon Cognito
-  callback(null, event);
+  const { signInMethod } = event.request.clientMetadata ?? {};
+  logger.info(
+    `Requested signInMethod: ${signInMethod} (attempt: ${countAttempts(event)})`
+  );
+
+  if (signInMethod === 'MAGIC_LINK') {
+    return handleMagicLinkResponse(event);
+  } else if (signInMethod === 'SMS_OTP_STEPUP') {
+    return handleSmsOtpStepUpResponse(event);
+  } else if (signInMethod === 'FIDO2') {
+    return handleFido2Response(event);
+  }
+
+  return deny(event, `Unrecognized signInMethod: ${signInMethod}`);
 };
+
+function handleMagicLinkResponse(event) {
+  logger.info('Checking Magic Link Auth ...');
+  const { alreadyHaveMagicLink } = event.request.clientMetadata ?? {};
+  const lastResponse = event.request.session.slice(-1)[0];
+  if (lastResponse.challengeResult === true) {
+    return allow(event);
+  } else if (alreadyHaveMagicLink !== 'yes' && countAttempts(event) === 0) {
+    logger.info('No magic link yet, creating one');
+    return customChallenge(event);
+  }
+  return deny(event, 'Failed to authenticate with Magic Link');
+}
+
+function handleSmsOtpStepUpResponse(event) {
+  logger.info('Checking SMS OTP Step Auth ...');
+  const lastResponse = event.request.session.slice(-1)[0];
+  const attemps = countAttempts(event);
+  if (lastResponse.challengeResult === true) {
+    return allow(event);
+  } else if (attemps < 3) {
+    logger.info(`Not successfull yet. Attempt number ${attemps + 1} of max 3`);
+    return customChallenge(event);
+  }
+  return deny(event, 'Failed to authenticate with SMS OTP Step-Up');
+}
+
+function handleFido2Response(event) {
+  logger.info('Checking Fido2 Auth ...');
+  const lastResponse = event.request.session.slice(-1)[0];
+  if (lastResponse.challengeResult === true) {
+    return allow(event);
+  }
+  return deny(event, 'Failed to authenticate with FIDO2');
+}
+
+function deny(event, reason) {
+  logger.info('Failing authentication because:', reason);
+  event.response.issueTokens = false;
+  event.response.failAuthentication = true;
+  logger.debug(JSON.stringify(event, null, 2));
+  return event;
+}
+
+function allow(event) {
+  logger.info('Authentication successfull');
+  event.response.issueTokens = true;
+  event.response.failAuthentication = false;
+  logger.debug(JSON.stringify(event, null, 2));
+  return event;
+}
+
+function customChallenge(event) {
+  event.response.issueTokens = false;
+  event.response.failAuthentication = false;
+  event.response.challengeName = 'CUSTOM_CHALLENGE';
+  logger.info('Next step: CUSTOM_CHALLENGE');
+  logger.debug(JSON.stringify(event, null, 2));
+  return event;
+}
+
+function countAttempts(event, excludeProvideAuthParameters = true) {
+  if (!excludeProvideAuthParameters) return event.request.session.length;
+  return event.request.session.filter(
+    (entry) => entry.challengeMetadata !== 'PROVIDE_AUTH_PARAMETERS'
+  ).length;
+}
