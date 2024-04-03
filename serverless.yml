@@ -92,6 +92,9 @@ functions:
           pool: aol-${sls:stage}
           trigger: DefineAuthChallenge
           existing: true
+    environment:
+      LOG_LEVEL: DEBUG
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
   createAuthChallenge:
     handler: src/functions/createAuthChallenge.handler
@@ -101,6 +104,17 @@ functions:
           pool: aol-${sls:stage}
           trigger: CreateAuthChallenge
           existing: true
+    environment:
+      FIDO2_ENABLED: TRUE
+      DYNAMODB_AUTHENTICATORS_TABLE: cognito-passwordless-Fido2AuthenticatorsTablePasswordlessBDEAEEE6-X5X3PVGEKZR7
+      DYNAMODB_SECRETS_TABLE: cognito-passwordless-SecretsTablePasswordless8B664A61-1K60WW37ERANU
+      EXPOSE_USER_CREDENTIAL_IDS: TRUE
+      KMS_KEY_ID: alias/Passwordless-cognito-passwordless
+      LOG_LEVEL: DEBUG
+      MAGIC_LINK_ENABLED: TRUE
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+      ALLOWED_APPLICATION_ORIGINS:
+      ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
 
   verifyAuthChallenge:
     handler: src/functions/verifyAuthChallenge.handler
@@ -110,6 +124,18 @@ functions:
           pool: aol-${sls:stage}
           trigger: VerifyAuthChallengeResponse
           existing: true
+    environment:
+      FIDO2_ENABLED: TRUE
+      DYNAMODB_AUTHENTICATORS_TABLE: cognito-passwordless-Fido2AuthenticatorsTablePasswordlessBDEAEEE6-X5X3PVGEKZR7
+      DYNAMODB_SECRETS_TABLE: cognito-passwordless-SecretsTablePasswordless8B664A61-1K60WW37ERANU
+      EXPOSE_USER_CREDENTIAL_IDS: TRUE
+      KMS_KEY_ID: alias/Passwordless-cognito-passwordless
+      LOG_LEVEL: DEBUG
+      MAGIC_LINK_ENABLED: TRUE
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+      ALLOWED_APPLICATION_ORIGINS:
+      ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      ALLOWED_RELYING_PARTY_IDS: localhost,dc2t9waxh7vse.cloudfront.net
 
   preToken:
     handler: src/functions/preToken.handler
@@ -119,3 +145,7 @@ functions:
           pool: aol-${sls:stage}
           trigger: PreTokenGeneration
           existing: true
+    environment:
+      CLIENT_METADATA_PERSISTED_KEYS: signInMethod,consent_id
+      LOG_LEVEL: DEBUG
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
