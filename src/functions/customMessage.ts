@@ -1,7 +1,10 @@
 import 'source-map-support/register';
 import { CustomMessageTriggerHandler } from 'aws-lambda';
 import pug from 'pug';
+import * as path from 'path';
 import { logger } from './../services/common';
+
+const templateDir = path.join(__dirname, '..', 'Template');
 
 export const handler: CustomMessageTriggerHandler = async (event, context) => {
   logger.debug(JSON.stringify(event, null, 2));
@@ -11,21 +14,18 @@ export const handler: CustomMessageTriggerHandler = async (event, context) => {
   let html = '';
 
   if (event.triggerSource === 'CustomMessage_ForgotPassword') {
-    html = await pug.renderFile(`${__dirname}/../Template/forgotPassword.pug`, {
+    html = await pug.renderFile(`${templateDir}/forgotPassword.pug`, {
       codeParameter: event.request.codeParameter,
     });
 
     event.response.emailSubject =
       'Art of Living Journey: Your verification code for reset password';
   } else if (event.triggerSource === 'CustomMessage_AdminCreateUser') {
-    html = await pug.renderFile(
-      `${__dirname}/../Template/adminCreateUser.pug`,
-      {
-        codeParameter: event.request.codeParameter,
-        email: event.request.usernameParameter,
-        firstName: event.request.userAttributes?.given_name || '',
-      }
-    );
+    html = await pug.renderFile(`${templateDir}/Template/adminCreateUser.pug`, {
+      codeParameter: event.request.codeParameter,
+      email: event.request.usernameParameter,
+      firstName: event.request.userAttributes?.given_name || '',
+    });
 
     event.response.smsMessage = `Your new profile is ready, ${
       event.request.userAttributes?.given_name || ''
