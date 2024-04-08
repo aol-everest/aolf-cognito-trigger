@@ -10,18 +10,21 @@ export const handler: CustomMessageTriggerHandler = async (event, context) => {
   let html = '';
 
   if (event.triggerSource === 'CustomMessage_ForgotPassword') {
-    html = await pug.renderFile('src/Template/forgotPassword.pug', {
+    html = await pug.renderFile(`${__dirname}/../Template/forgotPassword.pug`, {
       codeParameter: event.request.codeParameter,
     });
 
     event.response.emailSubject =
       'Art of Living Journey: Your verification code for reset password';
   } else if (event.triggerSource === 'CustomMessage_AdminCreateUser') {
-    html = await pug.renderFile('src/Template/adminCreateUser.pug', {
-      codeParameter: event.request.codeParameter,
-      email: event.request.usernameParameter,
-      firstName: event.request.userAttributes?.given_name || '',
-    });
+    html = await pug.renderFile(
+      `${__dirname}/../Template/adminCreateUser.pug`,
+      {
+        codeParameter: event.request.codeParameter,
+        email: event.request.usernameParameter,
+        firstName: event.request.userAttributes?.given_name || '',
+      }
+    );
 
     event.response.smsMessage = `Your new profile is ready, ${
       event.request.userAttributes?.given_name || ''
