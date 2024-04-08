@@ -31,6 +31,8 @@ provider:
     AOL_CLIENT_ID: ${self:custom.CONFIG.AOL_CLIENT_ID}
     CDK_STACK_NAME: passwordless-example
     CDK_STACK_SES_FROM_ADDRESS: app.support@us.artofliving.org
+    LOG_LEVEL: DEBUG
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 functions:
   customMessage:
@@ -95,9 +97,6 @@ functions:
           pool: aol-${sls:stage}
           trigger: DefineAuthChallenge
           existing: true
-    environment:
-      LOG_LEVEL: DEBUG
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
   createAuthChallenge:
     handler: src/functions/createAuthChallenge.handler
@@ -113,7 +112,6 @@ functions:
       DYNAMODB_SECRETS_TABLE: cognito-passwordless-SecretsTablePasswordless8B664A61-1K60WW37ERANU
       EXPOSE_USER_CREDENTIAL_IDS: TRUE
       KMS_KEY_ID: alias/Passwordless-cognito-passwordless
-      LOG_LEVEL: DEBUG
       MAGIC_LINK_ENABLED: TRUE
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
       ALLOWED_APPLICATION_ORIGINS:
@@ -124,7 +122,7 @@ functions:
       SECONDS_UNTIL_EXPIRY: 900
       SENDER_ID:
       SES_FROM_ADDRESS: app.support@us.artofliving.org
-      SES_REGION:
+      SES_REGION: us-east-1
       SIGN_IN_TIMEOUT: 120000
       SMS_OTP_STEP_UP_ENABLED: TRUE
       SNS_REGION: us-east-1
@@ -145,9 +143,7 @@ functions:
       DYNAMODB_SECRETS_TABLE: cognito-passwordless-SecretsTablePasswordless8B664A61-1K60WW37ERANU
       EXPOSE_USER_CREDENTIAL_IDS: TRUE
       KMS_KEY_ID: alias/Passwordless-cognito-passwordless
-      LOG_LEVEL: DEBUG
       MAGIC_LINK_ENABLED: TRUE
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
       ALLOWED_APPLICATION_ORIGINS:
       ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
       ALLOWED_RELYING_PARTY_IDS: localhost,dc2t9waxh7vse.cloudfront.net
@@ -165,5 +161,3 @@ functions:
           existing: true
     environment:
       CLIENT_METADATA_PERSISTED_KEYS: signInMethod,consent_id
-      LOG_LEVEL: DEBUG
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
