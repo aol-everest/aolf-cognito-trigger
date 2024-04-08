@@ -40,10 +40,10 @@ const signup = async (
 ) => {
   let signupOrganization = 'AOL';
   switch (callerContext.clientId) {
-    case config.get('IAHV_CLIENT_ID'):
+    case config.get('iahv_client_id'):
       signupOrganization = 'IAHV';
       break;
-    case config.get('HB_CLIENT_ID'):
+    case config.get('hb_client_id'):
       signupOrganization = 'HB';
       break;
   }

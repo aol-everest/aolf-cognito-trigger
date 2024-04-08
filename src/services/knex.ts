@@ -4,8 +4,8 @@ import config from 'config';
 
 // Only enable SSL in Heroku
 pg.defaults.ssl =
-  config.get<string>('DATABASE_URL').indexOf('127.0.0.1') < 0 &&
-  config.get<string>('DATABASE_URL').indexOf('app_postgres') < 0;
+  config.get<string>('database_url').indexOf('127.0.0.1') < 0 &&
+  config.get<string>('database_url').indexOf('app_postgres') < 0;
 
 function createKnexConnection(connection: string, searchPath: string) {
   return Knex({
@@ -26,7 +26,7 @@ async function transaction(client: any) {
 }
 
 const herokuConnectClient = createKnexConnection(
-  config.get('DATABASE_URL'),
+  config.get('database_url'),
   'public'
 );
 
