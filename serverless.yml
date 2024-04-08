@@ -118,6 +118,18 @@ functions:
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
       ALLOWED_APPLICATION_ORIGINS:
       ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      MIN_SECONDS_BETWEEN: 60
+      ORIGINATION_NUMBER:
+      OTP_LENGTH:
+      SECONDS_UNTIL_EXPIRY: 900
+      SENDER_ID:
+      SES_FROM_ADDRESS: app.support@us.artofliving.org
+      SES_REGION:
+      SIGN_IN_TIMEOUT: 120000
+      SMS_OTP_STEP_UP_ENABLED: TRUE
+      SNS_REGION:
+      STACK_ID: arn:aws:cloudformation:us-east-2:829901743612:stack/cognito-passwordless/ce2396f0-f1a9-11ee-a4fd-0aa83c143eb7
+      USER_VERIFICATION: required
 
   verifyAuthChallenge:
     handler: src/functions/verifyAuthChallenge.handler
@@ -139,6 +151,9 @@ functions:
       ALLOWED_APPLICATION_ORIGINS:
       ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
       ALLOWED_RELYING_PARTY_IDS: localhost,dc2t9waxh7vse.cloudfront.net
+      SMS_OTP_STEP_UP_ENABLED: TRUE
+      STACK_ID: arn:aws:cloudformation:us-east-2:829901743612:stack/cognito-passwordless/ce2396f0-f1a9-11ee-a4fd-0aa83c143eb7
+      USER_VERIFICATION: required
 
   preToken:
     handler: src/functions/preToken.handler
