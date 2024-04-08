@@ -127,7 +127,7 @@ functions:
       SES_REGION:
       SIGN_IN_TIMEOUT: 120000
       SMS_OTP_STEP_UP_ENABLED: TRUE
-      SNS_REGION:
+      SNS_REGION: us-east-1
       STACK_ID: arn:aws:cloudformation:us-east-2:829901743612:stack/cognito-passwordless/ce2396f0-f1a9-11ee-a4fd-0aa83c143eb7
       USER_VERIFICATION: required
 

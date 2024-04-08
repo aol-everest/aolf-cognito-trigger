@@ -24,6 +24,7 @@ export class UserFacingError extends Error {
 
 export function handleConditionalCheckFailedException(msg) {
   return (err) => {
+    console.log(err);
     if (err instanceof ConditionalCheckFailedException) {
       throw new UserFacingError(msg);
     }
