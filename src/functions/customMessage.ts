@@ -1,3 +1,4 @@
+import 'source-map-support/register';
 import { CustomMessageTriggerHandler } from 'aws-lambda';
 import pug from 'pug';
 import { logger } from './../services/common';
