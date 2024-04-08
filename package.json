@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.137",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/config": "^3.3.4",
+    "@types/pg": "^8.11.4",
     "@types/pug": "^2.0.10",
+    "@types/uuid": "^9.0.8",
     "serverless-offline": "^13.3.3",
     "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5.4.4"

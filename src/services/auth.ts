@@ -1,15 +1,32 @@
-const client = require('./knex').herokuConnectClient;
-const bcrypt = require('bcryptjs');
+import { herokuConnectClient } from './knex';
+import bcrypt from 'bcryptjs';
 
-const getRecordTypeId = async (sobject, recordTypeName) => {
-  const recordTypes = await client
+interface User {
+  sfid: string;
+  userType: string;
+  externalId: string;
+  name: string;
+  first_name: string;
+  deviceId: string;
+  last_name: string;
+  email: string;
+  isActive: boolean;
+  status: string;
+  password: string;
+  phone_number: string;
+  cognito_user_id__c: string;
+  user_status__pc: string;
+  user_default_organization__pc: string;
+  user_source__pc: string;
+  recordtypeid: string;
+  picture__c: string;
+}
+
+const getRecordTypeId = async (sobject: string, recordTypeName: string) => {
+  const recordTypes = await herokuConnectClient
     .withSchema('salesforce')
-    .select()
-    .distinct([
-      'recordtype.sfid',
-      'recordtype.developername',
-      'recordtype.name',
-    ])
+    .select(['recordtype.sfid', 'recordtype.developername', 'recordtype.name'])
+    .distinct()
     .from('recordtype')
     .where('recordtype.sobjecttype', sobject)
     .andWhere('recordtype.developername', recordTypeName);
@@ -18,16 +35,16 @@ const getRecordTypeId = async (sobject, recordTypeName) => {
   return recordType;
 };
 
-const isEmpty = (str) => !str || !str.trim();
+const isEmpty = (str: string | null | undefined) => !str || !str.trim();
 
-const lookupUser = async (userName) => {
+const lookupUser = async (userName: string) => {
   if (isEmpty(userName)) {
     return null;
   }
   const recordtype = await getRecordTypeId('Account', 'PersonAccount');
-  let query = client
+  let query = herokuConnectClient
     .withSchema('salesforce')
-    .select(
+    .select([
       'account.sfid',
       'account.entity_type__pc AS userType',
       'account.external_id__c AS externalId',
@@ -44,12 +61,13 @@ const lookupUser = async (userName) => {
       'account.user_status__pc',
       'account.user_default_organization__pc',
       'account.user_source__pc',
-      'account.recordtypeid'
-    )
+      'account.recordtypeid',
+      'account.picture__c',
+    ])
     .from('account')
     .where('account.recordtypeid', recordtype.sfid)
     .andWhere(
-      client.raw(
+      herokuConnectClient.raw(
         'LOWER(account.personemail) = ?',
         userName.toLowerCase().trim()
       )
@@ -59,11 +77,11 @@ const lookupUser = async (userName) => {
   if (results.length === 0) {
     return null;
   } else {
-    return results[0];
+    return results[0] as User;
   }
 };
 
-const authenticateUser = async (userName, password) => {
+const authenticateUser = async (userName: string, password: string) => {
   const user = await lookupUser(userName);
   if (!user) {
     throw new Error('[Incorrect username or password.]');
@@ -78,7 +96,4 @@ const authenticateUser = async (userName, password) => {
   return user;
 };
 
-module.exports = {
-  lookupUser,
-  authenticateUser,
-};
+export { lookupUser, authenticateUser };

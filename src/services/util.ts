@@ -1,4 +1,4 @@
-const composePhoneNumber = (phone_line_number) => {
+const composePhoneNumber = (phone_line_number: string): string => {
   const patt = new RegExp(
     /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/g
   );
@@ -16,12 +16,9 @@ const composePhoneNumber = (phone_line_number) => {
   return '';
 };
 
-const capitalize = (s) => {
+const capitalize = (s: string): string => {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 
-module.exports = {
-  composePhoneNumber,
-  capitalize,
-};
+export { composePhoneNumber, capitalize };

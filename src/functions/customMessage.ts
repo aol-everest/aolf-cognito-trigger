@@ -1,12 +1,18 @@
 import 'source-map-support/register';
-import { CustomMessageTriggerHandler } from 'aws-lambda';
+import {
+  CustomMessageTriggerHandler,
+  CustomMessageTriggerEvent,
+} from 'aws-lambda';
 import pug from 'pug';
 import * as path from 'path';
 import { logger } from './../services/common';
 
 const templateDir = path.join(__dirname, '..', 'Template');
 
-export const handler: CustomMessageTriggerHandler = async (event, context) => {
+export const handler: CustomMessageTriggerHandler = async (
+  event: CustomMessageTriggerEvent,
+  context
+) => {
   logger.debug(JSON.stringify(event, null, 2));
   logger.info('Custom Message Trigger Handler:', event.triggerSource);
   context.callbackWaitsForEmptyEventLoop = false;
