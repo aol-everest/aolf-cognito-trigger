@@ -1,4 +1,4 @@
-import { logger } from './../services/common.js';
+import { logger } from './../services/common';
 
 export const handler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
