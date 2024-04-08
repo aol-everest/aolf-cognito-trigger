@@ -1,6 +1,5 @@
 import Knex from 'knex';
 import pg from 'pg';
-import config from 'config';
 
 // Only enable SSL in Heroku
 pg.defaults.ssl =

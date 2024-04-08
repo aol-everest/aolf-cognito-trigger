@@ -2,7 +2,6 @@ import { herokuConnectClient as client } from './knex';
 import { v1 as uuidv1 } from 'uuid';
 import { lookupUser } from './auth';
 import upsert from './upsert';
-import config from 'config';
 
 interface CallerContext {
   clientId: string;

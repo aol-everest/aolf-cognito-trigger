@@ -1,7 +1,0 @@
-{
-  "database_url": "DATABASE_URL",
-  "iahv_client_id": "IAHV_CLIENT_ID",
-  "hb_client_id": "HB_CLIENT_ID",
-  "aol_client_id": "AOL_CLIENT_ID",
-  "is_local_development": "IS_LOCAL_DEVELOPMENT"
-}
