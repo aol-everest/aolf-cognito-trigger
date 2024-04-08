@@ -1,6 +1,7 @@
 {
   "name": "aolf-cognito-trigger",
   "version": "1.0.0",
+  "type": "module",
   "devDependencies": {},
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.540.0",
