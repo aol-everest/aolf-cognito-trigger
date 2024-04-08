@@ -14,16 +14,17 @@
  */
 
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 
 export class UserFacingError extends Error {
-  constructor(msg) {
+  constructor(msg: string) {
     super(msg);
     this.name = 'UserFacingError';
   }
 }
 
-export function handleConditionalCheckFailedException(msg) {
-  return (err) => {
+export function handleConditionalCheckFailedException(msg: string) {
+  return (err: unknown) => {
     console.log(err);
     if (err instanceof ConditionalCheckFailedException) {
       throw new UserFacingError(msg);
@@ -32,30 +33,27 @@ export function handleConditionalCheckFailedException(msg) {
   };
 }
 
-export let LogLevel;
-(function (LogLevel) {
-  LogLevel[(LogLevel['none'] = 0)] = 'none';
-  LogLevel[(LogLevel['error'] = 10)] = 'error';
-  LogLevel[(LogLevel['info'] = 20)] = 'info';
-  LogLevel[(LogLevel['debug'] = 30)] = 'debug';
-})(LogLevel || (LogLevel = {}));
+export enum LogLevel {
+  'none' = 0,
+  'error' = 10,
+  'info' = 20,
+  'debug' = 30,
+}
 
 export class Logger {
-  constructor(logLevel) {
-    this.logLevel = logLevel;
-  }
+  constructor(private logLevel: LogLevel) {}
 
-  error(...args) {
+  public error(...args: unknown[]) {
     if (this.logLevel >= LogLevel.error) {
       console.error(...args);
     }
   }
-  info(...args) {
+  public info(...args: unknown[]) {
     if (this.logLevel >= LogLevel.info) {
       console.log(...args);
     }
   }
-  debug(...args) {
+  public debug(...args: unknown[]) {
     if (this.logLevel >= LogLevel.debug) {
       console.trace(...args);
     }
@@ -76,7 +74,13 @@ export let logger = new Logger(logLevel);
  * If possible we'll use the username (so that usernameless sign-in can be supported),
  * but this requires the username to be opaque.
  */
-export function determineUserHandle({ sub, cognitoUsername }) {
+export function determineUserHandle({
+  sub,
+  cognitoUsername,
+}: {
+  sub?: string; // maybe undefined if userNotFound is true
+  cognitoUsername: string;
+}) {
   if (sub === cognitoUsername) return sub; // usernameless sign-in supported
   if (!sub || isOpaqueIdentifier(cognitoUsername)) {
     /**
@@ -88,11 +92,11 @@ export function determineUserHandle({ sub, cognitoUsername }) {
   return `s|${sub}`; // usernameless sign-in NOT supported, we prefix with "s|" so the UI can detect this
 }
 
-function isOpaqueIdentifier(cognitoUsername) {
+function isOpaqueIdentifier(cognitoUsername: string) {
   return isUuid(cognitoUsername);
 }
 
-function isUuid(cognitoUsername) {
+function isUuid(cognitoUsername: string) {
   return !!cognitoUsername.match(
     /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
   );
@@ -108,8 +112,10 @@ const corsHeaderAvailable = !!(
   allowedHeaders &&
   maxAge
 );
-export function withCommonHeaders(handler) {
-  const wrapped = (event, context, cb) => {
+export function withCommonHeaders<T extends APIGatewayProxyHandler>(
+  handler: T
+) {
+  const wrapped: APIGatewayProxyHandler = (event, context, cb) => {
     return handler(event, context, () =>
       cb(
         new Error('Callback style response from wrapped handler not supported')
@@ -142,14 +148,14 @@ export function withCommonHeaders(handler) {
       return response;
     });
   };
-  return wrapped;
+  return wrapped as T;
 }
 
 export function isValidOrigin(
-  origin,
-  allowedWebOrigins,
-  allowedApplicationOrigins
-) {
+  origin: string,
+  allowedWebOrigins: string[],
+  allowedApplicationOrigins: string[]
+): boolean {
   return (
     !!origin &&
     (allowedApplicationOrigins.includes(origin) ||
