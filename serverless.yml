@@ -4,8 +4,13 @@ service: cognito-trigger
 
 frameworkVersion: '3'
 
+package:
+  include:
+    - src/**/*.pug
+
 plugins:
   - serverless-plugin-typescript
+  - serverless-offline
 
 custom:
   STAGE: ${self:provider.stage}
