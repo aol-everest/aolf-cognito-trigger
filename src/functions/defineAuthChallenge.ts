@@ -1,6 +1,25 @@
-import { logger } from './../services/common';
+/**
+ * Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"). You
+ * may not use this file except in compliance with the License. A copy of
+ * the License is located at
+ *
+ *     http://aws.amazon.com/apache2.0/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ */
 
-export const handler = async (event) => {
+import {
+  DefineAuthChallengeTriggerHandler,
+  DefineAuthChallengeTriggerEvent,
+} from 'aws-lambda';
+import { logger } from './../services/common.js';
+
+export const handler: DefineAuthChallengeTriggerHandler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
 
   if (!event.request.session.length) {
@@ -34,7 +53,7 @@ export const handler = async (event) => {
   return deny(event, `Unrecognized signInMethod: ${signInMethod}`);
 };
 
-function handleMagicLinkResponse(event) {
+function handleMagicLinkResponse(event: DefineAuthChallengeTriggerEvent) {
   logger.info('Checking Magic Link Auth ...');
   const { alreadyHaveMagicLink } = event.request.clientMetadata ?? {};
   const lastResponse = event.request.session.slice(-1)[0];
@@ -47,7 +66,7 @@ function handleMagicLinkResponse(event) {
   return deny(event, 'Failed to authenticate with Magic Link');
 }
 
-function handleSmsOtpStepUpResponse(event) {
+function handleSmsOtpStepUpResponse(event: DefineAuthChallengeTriggerEvent) {
   logger.info('Checking SMS OTP Step Auth ...');
   const lastResponse = event.request.session.slice(-1)[0];
   const attemps = countAttempts(event);
@@ -60,7 +79,7 @@ function handleSmsOtpStepUpResponse(event) {
   return deny(event, 'Failed to authenticate with SMS OTP Step-Up');
 }
 
-function handleFido2Response(event) {
+function handleFido2Response(event: DefineAuthChallengeTriggerEvent) {
   logger.info('Checking Fido2 Auth ...');
   const lastResponse = event.request.session.slice(-1)[0];
   if (lastResponse.challengeResult === true) {
@@ -69,7 +88,7 @@ function handleFido2Response(event) {
   return deny(event, 'Failed to authenticate with FIDO2');
 }
 
-function deny(event, reason) {
+function deny(event: DefineAuthChallengeTriggerEvent, reason: string) {
   logger.info('Failing authentication because:', reason);
   event.response.issueTokens = false;
   event.response.failAuthentication = true;
@@ -77,7 +96,7 @@ function deny(event, reason) {
   return event;
 }
 
-function allow(event) {
+function allow(event: DefineAuthChallengeTriggerEvent) {
   logger.info('Authentication successfull');
   event.response.issueTokens = true;
   event.response.failAuthentication = false;
@@ -85,7 +104,7 @@ function allow(event) {
   return event;
 }
 
-function customChallenge(event) {
+function customChallenge(event: DefineAuthChallengeTriggerEvent) {
   event.response.issueTokens = false;
   event.response.failAuthentication = false;
   event.response.challengeName = 'CUSTOM_CHALLENGE';
@@ -94,7 +113,10 @@ function customChallenge(event) {
   return event;
 }
 
-function countAttempts(event, excludeProvideAuthParameters = true) {
+function countAttempts(
+  event: DefineAuthChallengeTriggerEvent,
+  excludeProvideAuthParameters = true
+) {
   if (!excludeProvideAuthParameters) return event.request.session.length;
   return event.request.session.filter(
     (entry) => entry.challengeMetadata !== 'PROVIDE_AUTH_PARAMETERS'

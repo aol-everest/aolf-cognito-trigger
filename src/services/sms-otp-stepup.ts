@@ -1,3 +1,21 @@
+/**
+ * Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"). You
+ * may not use this file except in compliance with the License. A copy of
+ * the License is located at
+ *
+ *     http://aws.amazon.com/apache2.0/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ */
+import {
+  CreateAuthChallengeTriggerEvent,
+  VerifyAuthChallengeResponseTriggerEvent,
+} from 'aws-lambda';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
 import { randomInt } from 'crypto';
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
@@ -23,19 +41,23 @@ let config = {
   jwtVerifier: verifyJwt,
 };
 
-function requireConfig(k) {
+function requireConfig<K extends keyof typeof config>(
+  k: K
+): NonNullable<(typeof config)[K]> {
   // eslint-disable-next-line security/detect-object-injection
   const value = config[k];
   if (value === undefined) throw new Error(`Missing configuration for: ${k}`);
   return value;
 }
 
-export function configure(update) {
+export function configure(update?: Partial<typeof config>) {
   config = { ...config, ...update };
   return config;
 }
 
-export async function addChallengeToEvent(event) {
+export async function addChallengeToEvent(
+  event: CreateAuthChallengeTriggerEvent
+) {
   if (!config.smsOtpStepUpEnabled)
     throw new UserFacingError(
       'Step-up authentication with SMS OTP not supported'
@@ -58,7 +80,7 @@ export async function addChallengeToEvent(event) {
   event.response.challengeMetadata = `SMS-OTP-STEPUP-CODE-${secretCode}`;
 }
 
-async function createChallenge(event) {
+async function createChallenge(event: CreateAuthChallengeTriggerEvent) {
   logger.info('Creating SMS OTP step-up challenge ...');
   let phoneNumber = event.request.userAttributes.phone_number_verified
     ? event.request.userAttributes.phone_number
@@ -79,15 +101,15 @@ async function createChallenge(event) {
     /SMS-OTP-STEPUP-CODE-(\d+)/
   )?.[1];
 
-  let secretCode;
+  let secretCode: string;
   if (!previousSecretCode) {
     logger.info(
       'SMS Code has not been sent yet, generating and sending one ...'
     );
-    secretCode = [...new Array(requireConfig('secretCodeLength'))]
+    secretCode = [...new Array<unknown>(requireConfig('secretCodeLength'))]
       .map(() => randomInt(0, 9))
       .join('');
-    const attributes = {};
+    const attributes: PublishCommand['input']['MessageAttributes'] = {};
     if (config.senderId) {
       attributes['AWS.SNS.SMS.SenderID'] = {
         DataType: 'String',
@@ -128,11 +150,18 @@ async function createChallenge(event) {
   };
 }
 
-async function createSmsContent({ secretCode }) {
+async function createSmsContent({
+  secretCode,
+}: {
+  secretCode: string;
+  event: CreateAuthChallengeTriggerEvent;
+}) {
   return `Your verification code is: ${secretCode}`;
 }
 
-export async function addChallengeVerificationResultToEvent(event) {
+export async function addChallengeVerificationResultToEvent(
+  event: VerifyAuthChallengeResponseTriggerEvent
+) {
   logger.info('Verifying SMS OTP StepUp Challenge Response ...');
   if (event.request.userNotFound) {
     logger.info('User not found');
@@ -146,7 +175,7 @@ export async function addChallengeVerificationResultToEvent(event) {
     'PROVIDE_AUTH_PARAMETERS'
   )
     return;
-  let parsedAnswer;
+  let parsedAnswer: unknown;
   try {
     parsedAnswer = JSON.parse(event.request.challengeAnswer);
     assertIsAnswer(parsedAnswer);
@@ -168,7 +197,9 @@ export async function addChallengeVerificationResultToEvent(event) {
   event.response.answerCorrect = secretCodeValid && jwtValid;
 }
 
-function assertIsAnswer(answer) {
+function assertIsAnswer(
+  answer: unknown
+): asserts answer is { secretCode: string; jwt: string } {
   if (
     !answer ||
     typeof answer !== 'object' ||
@@ -182,7 +213,17 @@ function assertIsAnswer(answer) {
 }
 
 const jwksCache = new SimpleJwksCache();
-async function verifyJwt({ userPoolId, clientId, jwt, sub }) {
+async function verifyJwt({
+  userPoolId,
+  clientId,
+  jwt,
+  sub,
+}: {
+  userPoolId: string;
+  clientId: string;
+  jwt: string;
+  sub: string;
+}) {
   return CognitoJwtVerifier.create(
     {
       userPoolId,
@@ -204,7 +245,7 @@ async function verifyJwt({ userPoolId, clientId, jwt, sub }) {
     });
 }
 
-function maskPhoneNumber(phoneNumber) {
+function maskPhoneNumber(phoneNumber: string) {
   const show = phoneNumber.length < 8 ? 2 : 4;
   return `+${new Array(11 - show).fill('*').join('')}${phoneNumber.slice(
     -show

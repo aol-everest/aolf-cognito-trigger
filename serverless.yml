@@ -4,6 +4,9 @@ service: cognito-trigger
 
 frameworkVersion: '3'
 
+plugins:
+  - serverless-plugin-typescript
+
 custom:
   STAGE: ${self:provider.stage}
   CONFIG: ${file(./config/config.js):CONFIG}

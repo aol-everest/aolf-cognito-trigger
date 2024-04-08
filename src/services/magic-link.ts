@@ -14,6 +14,10 @@
  */
 import { createHash, createPublicKey, constants, createVerify } from 'crypto';
 import {
+  CreateAuthChallengeTriggerEvent,
+  VerifyAuthChallengeResponseTriggerEvent,
+} from 'aws-lambda';
+import {
   DynamoDBClient,
   ConditionalCheckFailedException,
 } from '@aws-sdk/client-dynamodb';
@@ -68,14 +72,16 @@ let config = {
     "We can't send you a magic link right now, please try again in a minute",
 };
 
-function requireConfig(k) {
+function requireConfig<K extends keyof typeof config>(
+  k: K
+): NonNullable<(typeof config)[K]> {
   // eslint-disable-next-line security/detect-object-injection
   const value = config[k];
   if (value === undefined) throw new Error(`Missing configuration for: ${k}`);
   return value;
 }
 
-export function configure(update) {
+export function configure(update?: Partial<typeof config>) {
   const oldSesRegion = config.sesRegion;
   config = { ...config, ...update };
   if (update && update.sesRegion !== oldSesRegion) {
@@ -84,7 +90,7 @@ export function configure(update) {
   return config;
 }
 
-const publicKeys = {};
+const publicKeys: Record<string, ReturnType<typeof createPublicKey>> = {};
 const kms = new KMSClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: {
@@ -93,7 +99,9 @@ const ddbDocClient = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
 });
 let ses = new SESClient({ region: config.sesRegion });
 
-export async function addChallengeToEvent(event) {
+export async function addChallengeToEvent(
+  event: CreateAuthChallengeTriggerEvent
+): Promise<void> {
   if (!config.magicLinkEnabled)
     throw new UserFacingError('Sign-in with Magic Link not supported');
   event.response.challengeMetadata = 'MAGIC_LINK';
@@ -132,7 +140,11 @@ export async function addChallengeToEvent(event) {
   };
 }
 
-async function createEmailContent({ secretLoginLink }) {
+async function createEmailContent({
+  secretLoginLink,
+}: {
+  secretLoginLink: string;
+}) {
   return {
     html: {
       data: `<html><body><p>Your secret sign-in link: <a href="${secretLoginLink}">sign in</a></p>This link is valid for ${Math.floor(
@@ -151,7 +163,17 @@ async function createEmailContent({ secretLoginLink }) {
   };
 }
 
-async function sendEmailWithLink({ emailAddress, content }) {
+async function sendEmailWithLink({
+  emailAddress,
+  content,
+}: {
+  emailAddress: string;
+  content: {
+    html: { charSet: string; data: string };
+    text: { charSet: string; data: string };
+    subject: { charSet: string; data: string };
+  };
+}) {
   await ses
     .send(
       new SendEmailCommand({
@@ -189,7 +211,14 @@ async function sendEmailWithLink({ emailAddress, content }) {
     });
 }
 
-async function createAndSendMagicLink(event, { redirectUri }) {
+async function createAndSendMagicLink(
+  event: CreateAuthChallengeTriggerEvent,
+  {
+    redirectUri,
+  }: {
+    redirectUri: string;
+  }
+): Promise<void> {
   logger.debug('Creating new magic link ...');
   const exp = Math.floor(Date.now() / 1000 + config.secondsUntilExpiry);
   const iat = Math.floor(Date.now() / 1000);
@@ -267,7 +296,9 @@ async function createAndSendMagicLink(event, { redirectUri }) {
   logger.debug('Magic link sent!');
 }
 
-export async function addChallengeVerificationResultToEvent(event) {
+export async function addChallengeVerificationResultToEvent(
+  event: VerifyAuthChallengeResponseTriggerEvent
+) {
   logger.info('Verifying MagicLink Challenge Response ...');
   // Toggle userNotFound error with "Prevent user existence errors" in the Cognito app client. (see above)
   if (event.request.userNotFound) {
@@ -291,7 +322,7 @@ export async function addChallengeVerificationResultToEvent(event) {
   );
 }
 
-async function downloadPublicKey(kmsKeyId) {
+async function downloadPublicKey(kmsKeyId: string) {
   logger.debug('Downloading KMS public key');
   const { PublicKey: publicKey } = await kms.send(
     new GetPublicKeyCommand({
@@ -302,13 +333,17 @@ async function downloadPublicKey(kmsKeyId) {
     throw new Error('Failed to download public key from KMS');
   }
   return createPublicKey({
-    key: publicKey,
+    key: publicKey as Buffer,
     format: 'der',
     type: 'spki',
   });
 }
 
-async function verifyMagicLink(magicLinkFragmentIdentifier, userName, context) {
+async function verifyMagicLink(
+  magicLinkFragmentIdentifier: string,
+  userName: string,
+  context: { userPoolId: string; clientId: string }
+) {
   logger.debug(
     'Verifying magic link fragment identifier:',
     magicLinkFragmentIdentifier
@@ -317,7 +352,7 @@ async function verifyMagicLink(magicLinkFragmentIdentifier, userName, context) {
   const signature = Buffer.from(signatureB64, 'base64url');
 
   // Read and remove item from DynamoDB
-  let dbItem = undefined;
+  let dbItem: Record<string, unknown> | undefined = undefined;
   try {
     ({ Attributes: dbItem } = await ddbDocClient.send(
       new DeleteCommand({
@@ -374,7 +409,7 @@ async function verifyMagicLink(magicLinkFragmentIdentifier, userName, context) {
   );
   logger.debug(`Magic link signature is ${valid ? '' : 'NOT '}valid`);
   if (!valid) return false;
-  const parsed = JSON.parse(message.toString());
+  const parsed: unknown = JSON.parse(message.toString());
   assertIsMessage(parsed);
   logger.debug('Checking message:', parsed);
   if (parsed.userName !== userName) {
@@ -392,7 +427,9 @@ async function verifyMagicLink(magicLinkFragmentIdentifier, userName, context) {
   return valid;
 }
 
-function assertIsMessage(msg) {
+function assertIsMessage(
+  msg: unknown
+): asserts msg is { userName: string; exp: number; iat: number } {
   if (
     !msg ||
     typeof msg !== 'object' ||

@@ -1,9 +1,27 @@
-import * as fido2 from './../services/fido2';
-import * as smsOtpStepUp from './../services/sms-otp-stepup';
-import * as magicLink from './../services/magic-link';
-import { logger, UserFacingError } from './../services/common';
+/**
+ * Copyright Amazon.com, Inc. and its affiliates. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"). You
+ * may not use this file except in compliance with the License. A copy of
+ * the License is located at
+ *
+ *     http://aws.amazon.com/apache2.0/
+ *
+ * or in the "license" file accompanying this file. This file is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ */
+import {
+  CreateAuthChallengeTriggerHandler,
+  CreateAuthChallengeTriggerEvent,
+} from 'aws-lambda';
+import * as fido2 from './../services/fido2.js';
+import * as smsOtpStepUp from './../services/sms-otp-stepup.js';
+import * as magicLink from './../services/magic-link.js';
+import { logger, UserFacingError } from './../services/common.js';
 
-export const handler = async (event) => {
+export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
   try {
     if (!event.request.session || !event.request.session.length) {
@@ -38,10 +56,12 @@ export const handler = async (event) => {
   }
 };
 
-async function provideAuthParameters(event) {
+async function provideAuthParameters(
+  event: CreateAuthChallengeTriggerEvent
+): Promise<void> {
   logger.info('Creating challenge: PROVIDE_AUTH_PARAMETERS');
   event.response.challengeMetadata = 'PROVIDE_AUTH_PARAMETERS';
-  const parameters = {
+  const parameters: Record<string, string> = {
     challenge: 'PROVIDE_AUTH_PARAMETERS',
   };
   event.response.privateChallengeParameters = parameters;
