@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.137",
+    "@types/pug": "^2.0.10",
     "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5.4.4"
   },

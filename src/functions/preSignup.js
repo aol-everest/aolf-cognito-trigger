@@ -1,9 +1,5 @@
-const {
-  getUserByEmail,
-  linkProviderToUser,
-  listIdentityProviders,
-} = require('./../services/adminLinkProviderForUser');
 const { lookupUser } = require('./../services/auth');
+
 exports.handler = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
   console.log(event);

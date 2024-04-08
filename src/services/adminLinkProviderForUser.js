@@ -41,7 +41,6 @@ const linkProviderToUser = async (
   return result;
 };
 
-
 const listIdentityProviders = async (userPoolId) => {
   const params = {
     UserPoolId: userPoolId,
