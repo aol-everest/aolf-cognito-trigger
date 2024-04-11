@@ -27,7 +27,7 @@ export const handler: CustomMessageTriggerHandler = async (
     event.response.emailSubject =
       'Art of Living Journey: Your verification code for reset password';
   } else if (event.triggerSource === 'CustomMessage_AdminCreateUser') {
-    html = await pug.renderFile(`${templateDir}/Template/adminCreateUser.pug`, {
+    html = await pug.renderFile(`${templateDir}/adminCreateUser.pug`, {
       codeParameter: event.request.codeParameter,
       email: event.request.usernameParameter,
       firstName: event.request.userAttributes?.given_name || '',
