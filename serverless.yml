@@ -5,6 +5,8 @@ service: cognito-trigger
 frameworkVersion: '3'
 
 package:
+  excludeDevDependencies: true
+  individually: true
   include:
     - src/**/*.pug
 
