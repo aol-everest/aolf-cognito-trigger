@@ -31,6 +31,7 @@ provider:
   environment:
     STAGE: ${self:provider.stage}
     DATABASE_URL: ${self:custom.CONFIG.DATABASE_URL}
+    COGNITO_USER_POOL_ID: ${self:custom.CONFIG.COGNITO_USER_POOL_ID},
     IAHV_CLIENT_ID: ${self:custom.CONFIG.IAHV_CLIENT_ID}
     HB_CLIENT_ID: ${self:custom.CONFIG.HB_CLIENT_ID}
     AOL_CLIENT_ID: ${self:custom.CONFIG.AOL_CLIENT_ID}
@@ -166,3 +167,36 @@ functions:
           existing: true
     environment:
       CLIENT_METADATA_PERSISTED_KEYS: signInMethod,consent_id
+
+  fido2ChallengeApi:
+    handler: src/functions/fido2ChallengeApi.handler
+    name: ${sls:stage}-fido2ChallengeApi
+    environment:
+      CORS_ALLOWED_HEADERS: Content-Type
+      CORS_ALLOWED_METHODS: POST
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      CORS_MAX_AGE: 86400
+      DYNAMODB_AUTHENTICATORS_TABLE: cognito-passwordless-Fido2AuthenticatorsTablePasswordlessBDEAEEE6-X5X3PVGEKZR7
+      SIGN_IN_TIMEOUT: 120000
+      USER_VERIFICATION: required
+
+  fido2CredentialsApi:
+    handler: src/functions/fido2CredentialsApi.handler
+    name: ${sls:stage}-fido2CredentialsApi
+    environment:
+      ALLOWED_APPLICATION_ORIGINS:
+      ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      ALLOWED_RELYING_PARTY_IDS: localhost,dc2t9waxh7vse.cloudfront.net
+      ATTESTATION: none
+      AUTHENTICATOR_ATTACHMENT:
+      AUTHENTICATOR_REGISTRATION_TIMEOUT: 300000
+      COGNITO_USER_POOL_ID:
+      CORS_ALLOWED_HEADERS: Content-Type,Authorization
+      CORS_ALLOWED_METHODS: POST
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      CORS_MAX_AGE: 86400
+      DYNAMODB_AUTHENTICATORS_TABLE: cognito-passwordless-Fido2AuthenticatorsTablePasswordlessBDEAEEE6-X5X3PVGEKZR7
+      FIDO2_NOTIFICATION_LAMBDA_ARN: arn:aws:lambda:us-east-2:829901743612:function:cognito-passwordless-PasswordlessFido2Notification-44cJUUHdKU1i:$LATEST
+      RELYING_PARTY_NAME: Passwordless Fido2 Example
+      REQUIRE_RESIDENT_KEY:
+      USER_VERIFICATION: required

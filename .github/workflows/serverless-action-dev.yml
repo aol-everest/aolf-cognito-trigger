@@ -39,3 +39,4 @@ jobs:
           IAHV_CLIENT_ID: ${{secrets.DEV_IAHV_CLIENT_ID}}
           HB_CLIENT_ID: ${{secrets.DEV_HB_CLIENT_ID}}
           AOL_CLIENT_ID: ${{secrets.DEV_AOL_CLIENT_ID}}
+          COGNITO_USER_POOL_ID: ${{secrets.DEV_COGNITO_USER_POOL_ID}}
