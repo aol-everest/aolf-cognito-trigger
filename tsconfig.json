@@ -14,7 +14,7 @@
     "noImplicitReturns": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "preserveConstEnums": true
   },
   "include": ["src/**/*.*"],

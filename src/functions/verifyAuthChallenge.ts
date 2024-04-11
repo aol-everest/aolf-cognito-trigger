@@ -12,7 +12,7 @@
  * ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-import 'source-map-support/register';
+
 import { VerifyAuthChallengeResponseTriggerHandler } from 'aws-lambda';
 import * as fido2 from './../services/fido2';
 import * as smsOtpStepUp from './../services/sms-otp-stepup';

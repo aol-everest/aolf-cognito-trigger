@@ -1,4 +1,4 @@
-import 'source-map-support/register';
+
 import {
   CustomMessageTriggerHandler,
   CustomMessageTriggerEvent,
