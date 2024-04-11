@@ -7,7 +7,7 @@ frameworkVersion: '3'
 package:
   excludeDevDependencies: true
   individually: true
-  include:
+  patterns:
     - src/**/*.pug
 
 plugins:
