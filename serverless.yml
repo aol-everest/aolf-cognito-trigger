@@ -172,12 +172,6 @@ functions:
   fido2ChallengeApi:
     handler: src/functions/fido2ChallengeApi.handler
     name: ${sls:stage}-fido2ChallengeApi
-    events:
-      - http:
-          path: sign-in-challenge
-          method: post
-          authorizer:
-            arn: arn:aws:cognito-idp:us-east-2:829901743612:userpool/us-east-2_cJRZyuMaS
     environment:
       CORS_ALLOWED_HEADERS: Content-Type
       CORS_ALLOWED_METHODS: POST
