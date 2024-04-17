@@ -122,7 +122,7 @@ functions:
       MAGIC_LINK_ENABLED: TRUE
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
       ALLOWED_APPLICATION_ORIGINS:
-      ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      ALLOWED_ORIGINS: http://localhost:3000,https://aolf-web-qa-passwordless-49fa2f5e55b5.herokuapp.com
       MIN_SECONDS_BETWEEN: 60
       ORIGINATION_NUMBER:
       OTP_LENGTH:
@@ -152,7 +152,7 @@ functions:
       KMS_KEY_ID: alias/Passwordless-cognito-passwordless
       MAGIC_LINK_ENABLED: TRUE
       ALLOWED_APPLICATION_ORIGINS:
-      ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      ALLOWED_ORIGINS: http://localhost:3000,https://aolf-web-qa-passwordless-49fa2f5e55b5.herokuapp.com
       ALLOWED_RELYING_PARTY_IDS: localhost,dc2t9waxh7vse.cloudfront.net
       SMS_OTP_STEP_UP_ENABLED: TRUE
       STACK_ID: arn:aws:cloudformation:us-east-2:829901743612:stack/cognito-passwordless/ce2396f0-f1a9-11ee-a4fd-0aa83c143eb7
@@ -175,7 +175,7 @@ functions:
     environment:
       CORS_ALLOWED_HEADERS: Content-Type
       CORS_ALLOWED_METHODS: POST
-      CORS_ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,https://aolf-web-qa-passwordless-49fa2f5e55b5.herokuapp.com
       CORS_MAX_AGE: 86400
       DYNAMODB_AUTHENTICATORS_TABLE: cognito-passwordless-Fido2AuthenticatorsTablePasswordlessBDEAEEE6-X5X3PVGEKZR7
       SIGN_IN_TIMEOUT: 120000
@@ -186,7 +186,7 @@ functions:
     name: ${sls:stage}-fido2CredentialsApi
     environment:
       ALLOWED_APPLICATION_ORIGINS:
-      ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      ALLOWED_ORIGINS: http://localhost:3000,https://aolf-web-qa-passwordless-49fa2f5e55b5.herokuapp.com
       ALLOWED_RELYING_PARTY_IDS: localhost,dc2t9waxh7vse.cloudfront.net
       ATTESTATION: none
       AUTHENTICATOR_ATTACHMENT:
@@ -194,7 +194,7 @@ functions:
       COGNITO_USER_POOL_ID:
       CORS_ALLOWED_HEADERS: Content-Type,Authorization
       CORS_ALLOWED_METHODS: POST
-      CORS_ALLOWED_ORIGINS: http://localhost:3000,https://dc2t9waxh7vse.cloudfront.net
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,https://aolf-web-qa-passwordless-49fa2f5e55b5.herokuapp.com
       CORS_MAX_AGE: 86400
       DYNAMODB_AUTHENTICATORS_TABLE: cognito-passwordless-Fido2AuthenticatorsTablePasswordlessBDEAEEE6-X5X3PVGEKZR7
       FIDO2_NOTIFICATION_LAMBDA_ARN: arn:aws:lambda:us-east-2:829901743612:function:cognito-passwordless-PasswordlessFido2Notification-44cJUUHdKU1i:$LATEST
