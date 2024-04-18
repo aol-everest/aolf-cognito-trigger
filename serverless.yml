@@ -197,8 +197,7 @@ functions:
       CORS_ALLOWED_METHODS: POST
       CORS_MAX_AGE: 86400
       DYNAMODB_AUTHENTICATORS_TABLE: cognito-passwordless-Fido2AuthenticatorsTablePasswordlessBDEAEEE6-X5X3PVGEKZR7
-      FIDO2_NOTIFICATION_LAMBDA_ARN:
-        { 'Fn::GetAtt': ['${sls:stage}-fido2Notification', 'Arn'] }
+      FIDO2_NOTIFICATION_LAMBDA_ARN: !Ref fido2Notification
       RELYING_PARTY_NAME: Passwordless Fido2 Example
       REQUIRE_RESIDENT_KEY:
       USER_VERIFICATION: required
