@@ -6,4 +6,6 @@ module.exports.CONFIG = (serverless) => ({
   IAHV_CLIENT_ID: process.env.IAHV_CLIENT_ID,
   HB_CLIENT_ID: process.env.HB_CLIENT_ID,
   AOL_CLIENT_ID: process.env.AOL_CLIENT_ID,
+  REGION: process.env.REGION,
+  ACCOUNT_ID: process.env.ACCOUNT_ID,
 });

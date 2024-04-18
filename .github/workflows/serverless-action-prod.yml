@@ -40,3 +40,5 @@ jobs:
           HB_CLIENT_ID: ${{secrets.PROD_HB_CLIENT_ID}}
           AOL_CLIENT_ID: ${{secrets.PROD_AOL_CLIENT_ID}}
           COGNITO_USER_POOL_ID: ${{secrets.PROD_COGNITO_USER_POOL_ID}}
+          REGION: ${{secrets.REGION}}
+          ACCOUNT_ID: ${{secrets.ACCOUNT_ID}}
