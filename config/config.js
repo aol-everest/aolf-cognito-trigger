@@ -8,4 +8,7 @@ module.exports.CONFIG = (serverless) => ({
   AOL_CLIENT_ID: process.env.AOL_CLIENT_ID,
   REGION: process.env.REGION,
   ACCOUNT_ID: process.env.ACCOUNT_ID,
+  CORS_ALLOWED_ORIGINS: process.env.CORS_ALLOWED_ORIGINS,
+  ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS,
+  ALLOWED_RELYING_PARTY_IDS: process.env.ALLOWED_RELYING_PARTY_IDS,
 });
