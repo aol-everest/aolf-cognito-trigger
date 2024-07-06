@@ -4,8 +4,9 @@ import {
   PostAuthenticationTriggerEvent,
 } from 'aws-lambda';
 import { logger } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: PostAuthenticationTriggerHandler = async (
+export const handlerFunc: PostAuthenticationTriggerHandler = async (
   event: PostAuthenticationTriggerEvent,
   context
 ) => {
@@ -19,3 +20,5 @@ export const handler: PostAuthenticationTriggerHandler = async (
   // Return to Amazon Cognito
   return event;
 };
+
+export const handler = wrapWithMoesif(handlerFunc);

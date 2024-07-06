@@ -5,8 +5,9 @@ import {
   UserMigrationTriggerEvent,
 } from 'aws-lambda';
 import { logger } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: UserMigrationTriggerHandler = async (
+const handlerFunc: UserMigrationTriggerHandler = async (
   event: UserMigrationTriggerEvent,
   context
 ) => {
@@ -53,3 +54,5 @@ export const handler: UserMigrationTriggerHandler = async (
     throw new Error('User not found');
   }
 };
+
+export const handler = wrapWithMoesif(handlerFunc);

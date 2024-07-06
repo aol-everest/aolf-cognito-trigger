@@ -20,8 +20,9 @@ import * as fido2 from './../services/fido2.js';
 import * as smsOtpStepUp from './../services/sms-otp-stepup.js';
 import * as magicLink from './../services/magic-link.js';
 import { logger, UserFacingError } from './../services/common.js';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: CreateAuthChallengeTriggerHandler = async (event) => {
+const handlerFunc: CreateAuthChallengeTriggerHandler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
   try {
     if (!event.request.session || !event.request.session.length) {
@@ -67,3 +68,5 @@ async function provideAuthParameters(
   event.response.privateChallengeParameters = parameters;
   event.response.publicChallengeParameters = parameters;
 }
+
+export const handler = wrapWithMoesif(handlerFunc);

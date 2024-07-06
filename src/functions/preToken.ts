@@ -15,13 +15,14 @@
 
 import { PreTokenGenerationTriggerHandler } from 'aws-lambda';
 import { logger, UserFacingError } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
 const CLIENT_METADATA_PERSISTED_KEYS =
   process.env.CLIENT_METADATA_PERSISTED_KEYS?.split(',').map((key) =>
     key.trim()
   ) ?? [];
 
-export const handler: PreTokenGenerationTriggerHandler = async (event) => {
+const handlerFunc: PreTokenGenerationTriggerHandler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
   logger.info('PreToken Generation for trigger:', event.triggerSource);
   if (event.triggerSource === 'TokenGeneration_Authentication') {
@@ -56,3 +57,5 @@ export const handler: PreTokenGenerationTriggerHandler = async (event) => {
 function snakeCase(s: string) {
   return s.replace(/[A-Z]{1}/g, (matched) => `_${matched.toLowerCase()}`);
 }
+
+export const handler = wrapWithMoesif(handlerFunc);

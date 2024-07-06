@@ -1,4 +1,3 @@
-
 import {
   CustomMessageTriggerHandler,
   CustomMessageTriggerEvent,
@@ -6,10 +5,11 @@ import {
 import pug from 'pug';
 import * as path from 'path';
 import { logger } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
 const templateDir = path.join(__dirname, '..', 'Template');
 
-export const handler: CustomMessageTriggerHandler = async (
+const handlerFunc: CustomMessageTriggerHandler = async (
   event: CustomMessageTriggerEvent,
   context
 ) => {
@@ -45,3 +45,5 @@ export const handler: CustomMessageTriggerHandler = async (
   logger.debug(JSON.stringify(event, null, 2));
   return event;
 };
+
+export const handler = wrapWithMoesif(handlerFunc);

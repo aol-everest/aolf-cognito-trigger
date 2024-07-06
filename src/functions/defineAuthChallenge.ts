@@ -18,8 +18,9 @@ import {
   DefineAuthChallengeTriggerEvent,
 } from 'aws-lambda';
 import { logger } from './../services/common.js';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: DefineAuthChallengeTriggerHandler = async (event) => {
+const handlerFunc: DefineAuthChallengeTriggerHandler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
 
   if (!event.request.session.length) {
@@ -122,3 +123,5 @@ function countAttempts(
     (entry) => entry.challengeMetadata !== 'PROVIDE_AUTH_PARAMETERS'
   ).length;
 }
+
+export const handler = wrapWithMoesif(handlerFunc);

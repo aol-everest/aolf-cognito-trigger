@@ -18,8 +18,9 @@ import * as fido2 from './../services/fido2';
 import * as smsOtpStepUp from './../services/sms-otp-stepup';
 import * as magicLink from './../services/magic-link';
 import { logger, UserFacingError } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: VerifyAuthChallengeResponseTriggerHandler = async (
+const handlerFunc: VerifyAuthChallengeResponseTriggerHandler = async (
   event
 ) => {
   logger.debug(JSON.stringify(event, null, 2));
@@ -55,3 +56,5 @@ export const handler: VerifyAuthChallengeResponseTriggerHandler = async (
     throw new Error('Internal Server Error');
   }
 };
+
+export const handler = wrapWithMoesif(handlerFunc);

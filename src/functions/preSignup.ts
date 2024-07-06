@@ -1,8 +1,9 @@
 import { PreSignUpTriggerHandler, PreSignUpTriggerEvent } from 'aws-lambda';
 import { lookupUser } from './../services/auth';
 import { logger } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: PreSignUpTriggerHandler = async (
+const handlerFunc: PreSignUpTriggerHandler = async (
   event: PreSignUpTriggerEvent,
   context
 ) => {
@@ -64,3 +65,5 @@ export const handler: PreSignUpTriggerHandler = async (
   // Return response
   return event;
 };
+
+export const handler = wrapWithMoesif(handlerFunc);

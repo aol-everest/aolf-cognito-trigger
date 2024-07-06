@@ -2,7 +2,7 @@
   "name": "aolf-cognito-trigger",
   "version": "1.0.0",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.137",
+    "@types/aws-lambda": "^8.10.140",
     "@types/bcryptjs": "^2.4.6",
     "@types/pg": "^8.11.4",
     "@types/pug": "^2.0.10",
@@ -26,6 +26,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "knex": "^3.1.0",
+    "moesif-aws-lambda": "^2.0.0",
     "pg": "^8.11.4",
     "pug": "^3.0.2",
     "uuid": "^9.0.1"

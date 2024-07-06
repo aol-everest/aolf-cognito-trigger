@@ -23,6 +23,7 @@ import {
   AdminGetUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { logger, UserFacingError } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
 let ses = new SESClient({});
 const cognito = new CognitoIdentityProviderClient({});
@@ -64,7 +65,7 @@ export interface NotificationPayload {
   eventType: 'FIDO2_CREDENTIAL_CREATED' | 'FIDO2_CREDENTIAL_DELETED';
 }
 
-export const handler: Handler<NotificationPayload> = async (event) => {
+export const handlerFunc: Handler<NotificationPayload> = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
   const emailAddress = await getUserEmail(event.cognitoUsername);
   if (!emailAddress) {
@@ -189,3 +190,4 @@ async function getUserEmail(username: string) {
   }
   return email;
 }
+export const handler = wrapWithMoesif(handlerFunc);

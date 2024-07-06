@@ -5,8 +5,9 @@ import {
   Context,
 } from 'aws-lambda';
 import { logger } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: PreAuthenticationTriggerHandler = async (
+const handlerFunc: PreAuthenticationTriggerHandler = async (
   event: PreAuthenticationTriggerEvent,
   context: Context
 ) => {
@@ -36,3 +37,5 @@ export const handler: PreAuthenticationTriggerHandler = async (
     throw error;
   }
 };
+
+export const handler = wrapWithMoesif(handlerFunc);

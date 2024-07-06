@@ -4,8 +4,9 @@ import {
   PostConfirmationTriggerEvent,
 } from 'aws-lambda';
 import { logger } from './../services/common';
+import { wrapWithMoesif } from './../services/moesif';
 
-export const handler: PostConfirmationTriggerHandler = async (
+export const handlerFunc: PostConfirmationTriggerHandler = async (
   event: PostConfirmationTriggerEvent,
   context
 ) => {
@@ -25,3 +26,5 @@ export const handler: PostConfirmationTriggerHandler = async (
 
   return event;
 };
+
+export const handler = wrapWithMoesif(handlerFunc);
