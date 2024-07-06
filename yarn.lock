@@ -4566,6 +4566,11 @@ seek-bzip@^1.0.5:
   dependencies:
     commander "^2.8.1"
 
+semver@^7.3.5:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.2.tgz#1e3b34759f896e8f14d6134732ce798aeb0c6e13"
+  integrity sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==
+
 semver@^7.5.3:
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.0.tgz#1a46a4db4bffcccd97b743b5005c8325f23d4e2d"
@@ -4602,6 +4607,13 @@ serverless-offline@^13.3.3:
     p-retry "^6.2.0"
     velocityjs "^2.0.6"
     ws "^8.16.0"
+
+serverless-plugin-common-excludes@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/serverless-plugin-common-excludes/-/serverless-plugin-common-excludes-4.0.0.tgz#caa1de88d7be8c916b8db35292b0cce0dfd47707"
+  integrity sha512-jOJJ81LKGpEFdXWOCFr58JxtdPL0fWnUpmQsQXV4BHCE4Xs4Gg0F7liLXIBDQXmJlwCzg7oMJq4bm5ZyRONQsA==
+  dependencies:
+    semver "^7.3.5"
 
 serverless-plugin-typescript@^2.1.5:
   version "2.1.5"

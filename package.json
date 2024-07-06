@@ -8,6 +8,7 @@
     "@types/pug": "^2.0.10",
     "@types/uuid": "^9.0.8",
     "serverless-offline": "^13.3.3",
+    "serverless-plugin-common-excludes": "^4.0.0",
     "serverless-plugin-typescript": "^2.1.5",
     "typescript": "^5.4.4"
   },
