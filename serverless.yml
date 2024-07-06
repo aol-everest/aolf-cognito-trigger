@@ -5,7 +5,7 @@ service: cognito-trigger
 frameworkVersion: '3'
 
 package:
-  individually: true
+  individually: false
   excludeDevDependencies: false
   patterns:
     - src/**/*.pug
