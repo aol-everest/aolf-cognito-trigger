@@ -5,9 +5,14 @@ service: cognito-trigger
 frameworkVersion: '3'
 
 package:
-  individually: false
+  individually: true
   excludeDevDependencies: false
   patterns:
+    - '!./**'
+    - '!node_modules/@aws-sdk/**/dist-es/**'
+    - '!node_modules/@aws-sdk/**/dist-types/**'
+    - '!node_modules/@smithy/**/dist-es/**'
+    - '!node_modules/@smithy/**/dist-types/**'
     - src/**/*.pug
 
 plugins:
@@ -17,8 +22,6 @@ plugins:
   - serverless-plugin-include-dependencies
 
 custom:
-  includeDependencies:
-    enableCaching: true
   STAGE: ${self:provider.stage}
   CONFIG: ${file(./config/config.js):CONFIG}
 
