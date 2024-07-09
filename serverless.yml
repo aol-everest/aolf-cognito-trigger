@@ -5,10 +5,10 @@ service: cognito-trigger
 frameworkVersion: '3'
 
 package:
-  individually: true
-  excludeDevDependencies: false
+  # individually: true
+  excludeDevDependencies: true
   patterns:
-    - '!./**'
+    # - '!./**'
     - '!node_modules/@aws-sdk/**/dist-es/**'
     - '!node_modules/@aws-sdk/**/dist-types/**'
     - '!node_modules/@smithy/**/dist-es/**'
@@ -18,8 +18,8 @@ package:
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
-  - serverless-plugin-common-excludes
-  - serverless-plugin-include-dependencies
+  # - serverless-plugin-common-excludes
+  # - serverless-plugin-include-dependencies
 
 custom:
   STAGE: ${self:provider.stage}
