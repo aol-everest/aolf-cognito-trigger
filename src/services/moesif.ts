@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as moesif from 'moesif-aws-lambda';
+import moesif from 'moesif-aws-lambda';
 import {
   Handler,
   APIGatewayProxyEvent,
