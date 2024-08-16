@@ -17,7 +17,6 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { logger, withCommonHeaders } from './../services/common';
 import { randomBytes } from 'crypto';
-import { wrapWithMoesif } from './../services/moesif';
 
 const ddbDocClient = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: {
@@ -73,4 +72,4 @@ const _handler: APIGatewayProxyHandler = async (event) => {
   }
 };
 
-export const handler = wrapWithMoesif(withCommonHeaders(_handler));
+export const handler = withCommonHeaders(_handler);

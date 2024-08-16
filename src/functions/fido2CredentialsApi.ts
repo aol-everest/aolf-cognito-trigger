@@ -36,7 +36,6 @@ import {
   isValidOrigin,
 } from './../services/common';
 import { NotificationPayload } from './../services/fido2Notification';
-import { wrapWithMoesif } from './../services/moesif';
 
 const ddbDocClient = DynamoDBDocumentClient.from(new DynamoDBClient({}), {
   marshallOptions: {
@@ -206,9 +205,7 @@ const _handler: APIGatewayProxyWithCognitoAuthorizerHandler = async (event) => {
     };
   }
 };
-export const handler = wrapWithMoesif(
-  withCommonHeaders(_handler as APIGatewayProxyHandler)
-);
+export const handler = withCommonHeaders(_handler as APIGatewayProxyHandler);
 interface UserDetails {
   id: string;
   name: string;

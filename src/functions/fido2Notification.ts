@@ -23,7 +23,6 @@ import {
   AdminGetUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { logger, UserFacingError } from './../services/common';
-import { wrapWithMoesif } from './../services/moesif';
 
 let ses = new SESClient({});
 const cognito = new CognitoIdentityProviderClient({});
@@ -190,4 +189,4 @@ async function getUserEmail(username: string) {
   }
   return email;
 }
-export const handler = wrapWithMoesif(handlerFunc);
+export const handler = handlerFunc;

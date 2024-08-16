@@ -50,7 +50,6 @@ provider:
     SES_REGION: us-east-1
     LOG_LEVEL: DEBUG
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    MOESIF_APPLICATION_ID: ${self:custom.CONFIG.MOESIF_APPLICATION_ID}
     CORS_ALLOWED_ORIGINS: ${self:custom.CONFIG.CORS_ALLOWED_ORIGINS}
     # http://localhost:3000,https://aolf-web-qa-passwordless-49fa2f5e55b5.herokuapp.com
     ALLOWED_ORIGINS: ${self:custom.CONFIG.ALLOWED_ORIGINS}

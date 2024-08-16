@@ -18,32 +18,12 @@ import * as fido2 from './../services/fido2';
 import * as smsOtpStepUp from './../services/sms-otp-stepup';
 import * as magicLink from './../services/magic-link';
 import { logger, UserFacingError } from './../services/common';
-import { moesif } from './../services/moesif';
 
 const handlerFunc: VerifyAuthChallengeResponseTriggerHandler = async (
   event
 ) => {
   logger.debug(JSON.stringify(event, null, 2));
-  moesif.track({
-    request: {
-      time: new Date(),
-      uri: 'https://your.cognito.event/trigger', // A placeholder URI, just for identification
-      verb: 'POST', // HTTP verb is arbitrary here, as this isn't a real HTTP request
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: event, // Log the entire Cognito event payload
-    },
-    response: {
-      time: new Date(),
-      status: 200, // Adjust status code based on your logic
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: { message: 'Cognito event processed successfully' },
-    },
-    userId: event.userName || 'anonymous', // Identify the user if available
-  });
+
   try {
     event.response.answerCorrect = false;
 
