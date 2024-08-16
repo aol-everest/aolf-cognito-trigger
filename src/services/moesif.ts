@@ -1,6 +1,6 @@
 // @ts-ignore
 // import * as moesif from 'moesif-aws-lambda';
-import moesif = require('moesif-aws-lambda');
+import moesif from 'moesif-aws-lambda';
 import {
   Handler,
   APIGatewayProxyEvent,
@@ -21,16 +21,7 @@ const moesifOptions = {
 };
 
 const wrapWithMoesif = (handler: Handler) => {
-  return moesif(
-    moesifOptions,
-    async (
-      event: APIGatewayEvent,
-      context: Context,
-      callback: APIGatewayProxyCallback
-    ) => {
-      return await handler(event, context, callback);
-    }
-  );
+  return moesif(moesifOptions, handler);
 };
 
 export { moesifOptions, moesif, wrapWithMoesif };

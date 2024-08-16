@@ -18,11 +18,10 @@ const upsertSFObject = (
 const updateTimeStamp = async (userId: string, userAttribute: any) => {
   const user = await lookupUser(userAttribute.email);
   if (user) {
-    let userPayload = {
+    let userPayload: any = {
       external_id__c: user.externalId,
       cognito_user_id__c: userId,
       last_login__c: new Date(),
-      picture__c: null,
     };
     if (!user.cognito_user_id__c && userId) {
       userPayload = {
