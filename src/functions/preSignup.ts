@@ -1,18 +1,33 @@
 import { PreSignUpTriggerHandler, PreSignUpTriggerEvent } from 'aws-lambda';
 import { lookupUser } from './../services/auth';
 import { logger } from './../services/common';
-import { wrapWithMoesif } from './../services/moesif';
+import { moesif } from './../services/moesif';
 
 const handlerFunc: PreSignUpTriggerHandler = async (
   event: PreSignUpTriggerEvent,
   context
 ) => {
   logger.debug(JSON.stringify(event, null, 2));
-  logger.info('Pre SignUp Trigger Handler:', event.triggerSource);
-  logger.info('Trigger function =', event.triggerSource);
-  logger.info('User pool = ', event.userPoolId);
-  logger.info('App client ID = ', event.callerContext.clientId);
-  logger.info('User ID = ', event.userName);
+  moesif.track({
+    request: {
+      time: new Date(),
+      uri: 'https://your.cognito.event/trigger', // A placeholder URI, just for identification
+      verb: 'POST', // HTTP verb is arbitrary here, as this isn't a real HTTP request
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: event, // Log the entire Cognito event payload
+    },
+    response: {
+      time: new Date(),
+      status: 200, // Adjust status code based on your logic
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: { message: 'Cognito event processed successfully' },
+    },
+    userId: event.userName || 'anonymous', // Identify the user if available
+  });
 
   // Ensure Lambda doesn't wait for the event loop to be empty
   context.callbackWaitsForEmptyEventLoop = false;
@@ -66,4 +81,4 @@ const handlerFunc: PreSignUpTriggerHandler = async (
   return event;
 };
 
-export const handler = wrapWithMoesif(handlerFunc);
+export const handler = handlerFunc;

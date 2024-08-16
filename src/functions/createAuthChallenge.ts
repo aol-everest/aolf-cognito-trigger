@@ -20,10 +20,30 @@ import * as fido2 from './../services/fido2.js';
 import * as smsOtpStepUp from './../services/sms-otp-stepup.js';
 import * as magicLink from './../services/magic-link.js';
 import { logger, UserFacingError } from './../services/common.js';
-import { wrapWithMoesif } from './../services/moesif';
+import { moesif } from './../services/moesif';
 
 const handlerFunc: CreateAuthChallengeTriggerHandler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
+  moesif.track({
+    request: {
+      time: new Date(),
+      uri: 'https://your.cognito.event/trigger', // A placeholder URI, just for identification
+      verb: 'POST', // HTTP verb is arbitrary here, as this isn't a real HTTP request
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: event, // Log the entire Cognito event payload
+    },
+    response: {
+      time: new Date(),
+      status: 200, // Adjust status code based on your logic
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: { message: 'Cognito event processed successfully' },
+    },
+    userId: event.userName || 'anonymous', // Identify the user if available
+  });
   try {
     if (!event.request.session || !event.request.session.length) {
       // This is the first time Create Auth Challenge is called
@@ -69,4 +89,4 @@ async function provideAuthParameters(
   event.response.publicChallengeParameters = parameters;
 }
 
-export const handler = wrapWithMoesif(handlerFunc);
+export const handler = handlerFunc;

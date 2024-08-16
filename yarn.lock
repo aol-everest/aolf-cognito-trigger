@@ -1224,9 +1224,9 @@
   integrity sha512-uQVSa9jJUe/G/304lXspfWVpKpK4euFLgGiMQFOCpM/bgcAdeoHwi/OQz23O9GK2osz26ZiXRRV9aV+Yl1O8tw==
 
 "@babel/runtime@^7.15.4":
-  version "7.24.7"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.7.tgz#f4f0d5530e8dbdf59b3451b9b3e594b6ba082e12"
-  integrity sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==
+  version "7.25.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.25.0.tgz#3af9a91c1b739c569d5d80cc917280919c544ecb"
+  integrity sha512-7dRy4DwXwtzBrPbZflqxnvfxLF8kdZXPkhymtDeFoFqE6ldzjQFgYTtYIFARcLEYDrqfBfYcZt1WqFxRoyC9Rw==
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -2386,10 +2386,10 @@ axios-retry@^3.5.1:
     "@babel/runtime" "^7.15.4"
     is-retry-allowed "^2.2.0"
 
-axios@^1.6.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.2.tgz#b625db8a7051fbea61c35a3cbb3a1daa7b9c7621"
-  integrity sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==
+axios@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.4.tgz#4c8ded1b43683c8dd362973c393f3ede24052aa2"
+  integrity sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -4269,23 +4269,23 @@ module-definition@^5.0.1:
     ast-module-types "^5.0.0"
     node-source-walk "^6.0.1"
 
-moesif-aws-lambda@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/moesif-aws-lambda/-/moesif-aws-lambda-2.0.0.tgz#77b35ab1cc1bf0379cffca63afefe57519527bc2"
-  integrity sha512-cBJ+ZiZgPZkGLJ8QyU0Isttb/WeQYfZ3vF9ht6IP6vgjNRdUeZi49MuK1hrIvFZVggLPqYASRKQ/4eeGlS1d0g==
+moesif-aws-lambda@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/moesif-aws-lambda/-/moesif-aws-lambda-2.0.3.tgz#f2f582cb8a1567ad07099c1c238fdf0309227f4a"
+  integrity sha512-9Hude8nzYjoyr6AnjSiRU2YhYUOujDnfOZPJuSTXtbRXofPqjkbV5ooZzEDkycWMQEcd88fHhZwZpfnXxB8ZmA==
   dependencies:
     card-validator "^6.2.0"
     crypto-js "^4.2.0"
     lodash "^4.17.21"
-    moesifapi "^2.1.5"
+    moesifapi ">=2.1.9"
     request-ip "^3.3.0"
 
-moesifapi@^2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/moesifapi/-/moesifapi-2.1.5.tgz#9cfe74dd55057f5fabf9408152aa220e5155d398"
-  integrity sha512-zFqLbFb/liaCq4Gl/VqiaFO+fMtxt4SdN8zqK+auUAMYG0AN1B93FHcVI4pL8gighikzwxw0uy8YjWP4/9Qwow==
+moesifapi@>=2.1.9:
+  version "2.1.9"
+  resolved "https://registry.yarnpkg.com/moesifapi/-/moesifapi-2.1.9.tgz#9973e30a8d87b8c0e3dfdc8fb6d4bb9b530a02ad"
+  integrity sha512-Qji/2MksPu5Drt3yUAGlYVsjKk4snNAStHfpQLO3WjxnbzTy6LpHyCX4+Yrubpspc7mDbD2d23L1nNXen1f2iQ==
   dependencies:
-    axios "^1.6.2"
+    axios "^1.7.4"
     axios-retry "^3.5.1"
 
 ms@2.1.2:

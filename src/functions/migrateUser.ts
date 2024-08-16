@@ -5,7 +5,7 @@ import {
   UserMigrationTriggerEvent,
 } from 'aws-lambda';
 import { logger } from './../services/common';
-import { wrapWithMoesif } from './../services/moesif';
+import { moesif } from './../services/moesif';
 
 const handlerFunc: UserMigrationTriggerHandler = async (
   event: UserMigrationTriggerEvent,
@@ -15,9 +15,28 @@ const handlerFunc: UserMigrationTriggerHandler = async (
   context.callbackWaitsForEmptyEventLoop = false;
   logger.debug(JSON.stringify(event, null, 2));
   logger.info('User Migration Trigger:', event.triggerSource);
+  moesif.track({
+    request: {
+      time: new Date(),
+      uri: 'https://your.cognito.event/trigger', // A placeholder URI, just for identification
+      verb: 'POST', // HTTP verb is arbitrary here, as this isn't a real HTTP request
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: event, // Log the entire Cognito event payload
+    },
+    response: {
+      time: new Date(),
+      status: 200, // Adjust status code based on your logic
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: { message: 'Cognito event processed successfully' },
+    },
+    userId: event.userName || 'anonymous', // Identify the user if available
+  });
 
   const sfuser = await lookupUser(event.userName);
-  console.info(sfuser);
 
   if (sfuser) {
     if (event.triggerSource === 'UserMigration_Authentication') {
@@ -55,4 +74,4 @@ const handlerFunc: UserMigrationTriggerHandler = async (
   }
 };
 
-export const handler = wrapWithMoesif(handlerFunc);
+export const handler = handlerFunc;

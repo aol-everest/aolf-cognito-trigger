@@ -15,7 +15,7 @@
 
 import { PreTokenGenerationTriggerHandler } from 'aws-lambda';
 import { logger, UserFacingError } from './../services/common';
-import { wrapWithMoesif } from './../services/moesif';
+import { moesif } from './../services/moesif';
 
 const CLIENT_METADATA_PERSISTED_KEYS =
   process.env.CLIENT_METADATA_PERSISTED_KEYS?.split(',').map((key) =>
@@ -25,6 +25,26 @@ const CLIENT_METADATA_PERSISTED_KEYS =
 const handlerFunc: PreTokenGenerationTriggerHandler = async (event) => {
   logger.debug(JSON.stringify(event, null, 2));
   logger.info('PreToken Generation for trigger:', event.triggerSource);
+  moesif.track({
+    request: {
+      time: new Date(),
+      uri: 'https://your.cognito.event/trigger', // A placeholder URI, just for identification
+      verb: 'POST', // HTTP verb is arbitrary here, as this isn't a real HTTP request
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: event, // Log the entire Cognito event payload
+    },
+    response: {
+      time: new Date(),
+      status: 200, // Adjust status code based on your logic
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: { message: 'Cognito event processed successfully' },
+    },
+    userId: event.userName || 'anonymous', // Identify the user if available
+  });
   if (event.triggerSource === 'TokenGeneration_Authentication') {
     const clientMetadataToPersist =
       event.request.clientMetadata &&
@@ -58,4 +78,4 @@ function snakeCase(s: string) {
   return s.replace(/[A-Z]{1}/g, (matched) => `_${matched.toLowerCase()}`);
 }
 
-export const handler = wrapWithMoesif(handlerFunc);
+export const handler = handlerFunc;

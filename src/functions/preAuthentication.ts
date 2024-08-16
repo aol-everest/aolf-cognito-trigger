@@ -5,7 +5,7 @@ import {
   Context,
 } from 'aws-lambda';
 import { logger } from './../services/common';
-import { wrapWithMoesif } from './../services/moesif';
+import { moesif } from './../services/moesif';
 
 const handlerFunc: PreAuthenticationTriggerHandler = async (
   event: PreAuthenticationTriggerEvent,
@@ -13,6 +13,26 @@ const handlerFunc: PreAuthenticationTriggerHandler = async (
 ) => {
   logger.debug(JSON.stringify(event, null, 2));
   logger.info('Pre Authentication Trigger:', event.triggerSource);
+  moesif.track({
+    request: {
+      time: new Date(),
+      uri: 'https://your.cognito.event/trigger', // A placeholder URI, just for identification
+      verb: 'POST', // HTTP verb is arbitrary here, as this isn't a real HTTP request
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: event, // Log the entire Cognito event payload
+    },
+    response: {
+      time: new Date(),
+      status: 200, // Adjust status code based on your logic
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: { message: 'Cognito event processed successfully' },
+    },
+    userId: event.userName || 'anonymous', // Identify the user if available
+  });
 
   context.callbackWaitsForEmptyEventLoop = false;
 
@@ -38,4 +58,4 @@ const handlerFunc: PreAuthenticationTriggerHandler = async (
   }
 };
 
-export const handler = wrapWithMoesif(handlerFunc);
+export const handler = handlerFunc;

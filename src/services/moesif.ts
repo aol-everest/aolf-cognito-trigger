@@ -1,6 +1,6 @@
 // @ts-ignore
 // import * as moesif from 'moesif-aws-lambda';
-import moesif from 'moesif-aws-lambda';
+import Moesif from 'moesif-aws-lambda';
 import {
   Handler,
   APIGatewayProxyEvent,
@@ -18,8 +18,13 @@ const moesifOptions = {
   debug: true,
 };
 
+// Initialize Moesif with your application ID
+const moesif = Moesif({
+  applicationId: process.env.MOESIF_APPLICATION_ID, // Store Moesif App ID in environment variables
+});
+
 const wrapWithMoesif = (handler: Handler) => {
-  return moesif(moesifOptions, handler);
+  return Moesif(moesifOptions, handler);
 };
 
 export { moesifOptions, moesif, wrapWithMoesif };
