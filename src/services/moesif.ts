@@ -15,9 +15,7 @@ const moesifOptions = {
   identifyUser: (event: APIGatewayProxyEvent) => {
     return event.requestContext.identity.cognitoIdentityId;
   },
-  identifyCompany: (event: APIGatewayProxyEvent) => {
-    return '5678';
-  },
+  debug: true,
 };
 
 const wrapWithMoesif = (handler: Handler) => {
