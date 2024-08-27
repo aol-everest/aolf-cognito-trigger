@@ -58,11 +58,11 @@ const signup = async (
       personemail: userAttribute.email,
       picture__c: userAttribute.picture || user?.picture__c || '',
       recordtypeid: recordtype.sfid,
-      entity_type__pc: 'Member',
+      entity_type__pc: user?.userType || 'Member',
       status__c: 'Active',
       user_default_organization__pc: signupOrganization,
-      user_status__pc: 'Active',
-      user_source__pc: 'Member Site',
+      user_status__pc: user?.user_status__pc || 'Active',
+      user_source__pc: user?.user_source__pc || 'Member Site',
     };
 
     return await upsertSFObject(
