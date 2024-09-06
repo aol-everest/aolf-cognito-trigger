@@ -27,11 +27,19 @@ const handlerFunc: CustomMessageTriggerHandler = async (
     event.response.emailSubject =
       'Art of Living Journey: Your verification code for reset password';
   } else if (event.triggerSource === 'CustomMessage_AdminCreateUser') {
-    html = await pug.renderFile(`${templateDir}/adminCreateUser.pug`, {
-      codeParameter: event.request.codeParameter,
-      email: event.request.usernameParameter,
-      firstName: event.request.userAttributes?.given_name || '',
-    });
+    if (event.request.userAttributes['custom:source'] === 'COMBO_CHECKOUT') {
+      html = await pug.renderFile(`${templateDir}/adminCreateUserCombo.pug`, {
+        codeParameter: event.request.codeParameter,
+        email: event.request.usernameParameter,
+        firstName: event.request.userAttributes?.given_name || '',
+      });
+    } else {
+      html = await pug.renderFile(`${templateDir}/adminCreateUser.pug`, {
+        codeParameter: event.request.codeParameter,
+        email: event.request.usernameParameter,
+        firstName: event.request.userAttributes?.given_name || '',
+      });
+    }
 
     event.response.smsMessage = `Your new profile is ready, ${
       event.request.userAttributes?.given_name || ''
