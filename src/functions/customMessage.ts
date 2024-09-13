@@ -29,7 +29,7 @@ const handlerFunc: CustomMessageTriggerHandler = async (
   } else if (event.triggerSource === 'CustomMessage_AdminCreateUser') {
     if (event.request.userAttributes['custom:source'] === 'COMBO_CHECKOUT') {
       event.response.emailSubject =
-        '5 Core Competencies Program - Account ‘Login’ Information';
+        'Core Competencies Program - Account ‘Login’ Information';
       html = await pug.renderFile(`${templateDir}/adminCreateUserCombo.pug`, {
         codeParameter: event.request.codeParameter,
         email: event.request.usernameParameter,
