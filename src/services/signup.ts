@@ -52,7 +52,8 @@ const signup = async (
   if (!user || user.user_status__pc !== 'Disabled') {
     let userPayload = {
       external_id__c: user?.externalId || uuidv1(),
-      cognito_user_id__c: userId || user?.cognito_user_id__c,
+      cognito_user_id__c:
+        userAttribute.sub || userId || user?.cognito_user_id__c,
       firstname: userAttribute.given_name || user?.first_name || '',
       lastname: userAttribute.family_name || user?.last_name || 'UNKNOWN',
       personemail: userAttribute.email,
