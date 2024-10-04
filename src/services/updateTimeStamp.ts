@@ -2,6 +2,13 @@ import { herokuConnectClient as client } from './knex';
 import { lookupUser } from './auth';
 import upsert from './upsert';
 
+interface UserPayload {
+  external_id__c: string;
+  cognito_user_id__c: string;
+  picture__c: string;
+  last_login__c: Date;
+}
+
 const upsertSFObject = (
   tableName: string,
   recordObject: any,
@@ -18,23 +25,14 @@ const upsertSFObject = (
 const updateTimeStamp = async (userId: string, userAttribute: any) => {
   const user = await lookupUser(userAttribute.email);
   if (user) {
-    let userPayload: any = {
+    let userPayload: UserPayload = {
       external_id__c: user.externalId,
-      cognito_user_id__c: userId,
+      cognito_user_id__c:
+        userAttribute.sub || userId || user?.cognito_user_id__c,
+      picture__c: user.picture__c || userAttribute.picture,
       last_login__c: new Date(),
     };
-    if (!user.cognito_user_id__c && userId) {
-      userPayload = {
-        ...userPayload,
-        cognito_user_id__c: userId,
-      };
-    }
-    if (userAttribute.picture) {
-      userPayload = {
-        ...userPayload,
-        picture__c: userAttribute.picture,
-      };
-    }
+
     return await upsertSFObject(
       'salesforce.account',
       userPayload,
