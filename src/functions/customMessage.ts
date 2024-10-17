@@ -5,6 +5,7 @@ import {
 import pug from 'pug';
 import * as path from 'path';
 import { logger } from './../services/common';
+import { getDomain } from './../services/domain';
 
 const templateDir = path.join(__dirname, '..', 'Template');
 
@@ -16,12 +17,15 @@ const handlerFunc: CustomMessageTriggerHandler = async (
   logger.info('Custom Message Trigger Handler:', event.triggerSource);
 
   context.callbackWaitsForEmptyEventLoop = false;
+  const stage = (process.env.STAGE as 'dev' | 'qa' | 'prod') || 'prod';
+  const domain = getDomain(event.callerContext.clientId, stage);
 
   let html = '';
 
   if (event.triggerSource === 'CustomMessage_ForgotPassword') {
     html = await pug.renderFile(`${templateDir}/forgotPassword.pug`, {
       codeParameter: event.request.codeParameter,
+      domain,
     });
 
     event.response.emailSubject =
@@ -34,6 +38,7 @@ const handlerFunc: CustomMessageTriggerHandler = async (
         codeParameter: event.request.codeParameter,
         email: event.request.usernameParameter,
         firstName: event.request.userAttributes?.given_name || '',
+        domain,
       });
     } else {
       event.response.emailSubject = 'Welcome to the Art of Living!';
@@ -41,6 +46,7 @@ const handlerFunc: CustomMessageTriggerHandler = async (
         codeParameter: event.request.codeParameter,
         email: event.request.usernameParameter,
         firstName: event.request.userAttributes?.given_name || '',
+        domain,
       });
     }
 
