@@ -18,7 +18,9 @@ const composePhoneNumber = (phone_line_number: string): string => {
 
 const capitalize = (s: string): string => {
   if (typeof s !== 'string') return '';
+  console.log('test');
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
+
 
 export { composePhoneNumber, capitalize };
