@@ -13,10 +13,10 @@ function createKnexConnection(connection: string, searchPath: string) {
     },
     searchPath,
     debug: process.env.IS_LOCAL_DEVELOPMENT === 'TRUE',
-    pool: {
-      min: Number(process.env.DATABASE_POOL_MIN || '0'),
-      max: Number(process.env.DATABASE_POOL_MAX || '10'),
-    },
+    // pool: {
+    //   min: Number(process.env.DATABASE_POOL_MIN || '0'),
+    //   max: Number(process.env.DATABASE_POOL_MAX || '10'),
+    // },
   });
 }
 
