@@ -888,6 +888,6 @@ async function enqueueFido2Notification(payload: NotificationPayload) {
     logger.info('Successfully enqueued notification to user');
   } catch (error) {
     // Since the notification is best effort, we'll log but otherwise swallow the error
-    logger.error('Failed to enqueue notification to user:', error);
+    logger.error('Failed to enqueue notification to user :', error);
   }
 }
