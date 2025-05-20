@@ -14,8 +14,8 @@ function createKnexConnection(connection: string, searchPath: string) {
     searchPath,
     debug: process.env.IS_LOCAL_DEVELOPMENT === 'TRUE',
     pool: {
-      min: Number(process.env.DATABASE_POOL_MIN || '100'),
-      max: Number(process.env.DATABASE_POOL_MAX || '300'),
+      min: Number(process.env.DATABASE_POOL_MIN || '20'),
+      max: Number(process.env.DATABASE_POOL_MAX || '70'),
       idleTimeoutMillis: 30000, // 30 seconds (increased from 3s)
       acquireTimeoutMillis: 30000, // 60 second timeout when acquiring connection
       reapIntervalMillis: 5000, // Check for idle connections every second
